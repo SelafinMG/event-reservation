@@ -1,5 +1,4 @@
-@import "tailwindcss/preflight";
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --font-sans:    var(--font-outfit), system-ui, sans-serif;
