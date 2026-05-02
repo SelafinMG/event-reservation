@@ -16,3 +16,22 @@ export const getSessionQuestionsService = async (sessionId) => {
         
     }
 }
+
+export const createSessionQuestionService = async (sessionId, question) => {
+    try {
+        const sessionQuery = "SELECT * FROM sessions WHERE id = $1";
+        const sessionRequest = await pool.query(sessionQuery, [sessionId]);
+        if(sessionRequest.rowCount === 0) {
+            throw new Error("Session not found");
+        }
+        const questions = await getSessionQuestionsService(sessionId);
+        const questionCount = questions.length;
+        const questionIdPrefix = "q-";
+        const questionId = questionIdPrefix + (questionCount + 1);
+        const createQuestionQuery = "INSERT INTO questions (id, session_id, question) VALUES ($1, $2, $3) RETURNING *";
+        const questionRequest = await pool.query(createQuestionQuery, [questionId, sessionId, question]);
+        return questionRequest.rows[0];
+    } catch (error) {
+        throw error;
+    }
+}

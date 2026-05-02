@@ -1,13 +1,9 @@
 import { Router } from "express"
-import { getSessionQuestionsController } from "../controllers/session.controller.js"
+import { createSessionQuestionController, getSessionQuestionsController } from "../controllers/session.controller.js"
 
 const router = Router()
 
-router.get("/", (req, res) => {
-    res.send("Session route")
-})
-
-
-router.get("/:sessionId/questions", getSessionQuestionsController)
+router.get("/:sessionId/questions", getSessionQuestionsController);
+router.post("/:sessionId/questions", createSessionQuestionController);
 
 export default router
