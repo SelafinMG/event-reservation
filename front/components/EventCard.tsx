@@ -1,6 +1,15 @@
 import Link from "next/link";
 
-export default function EventCard({ event }) {
+type Event = {
+  id: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  location: string;
+};
+
+export default function EventCard({ event }: { event: Event }) {
   return (
     <div className="bg-blue-950/30 backdrop-blur-md border border-blue-800 rounded-lg p-4 shadow hover:shadow-lg transition">
       <h2 className="text-xl font-bold text-cyan-200">{event.title}</h2>
