@@ -1,0 +1,181 @@
+[
+  {
+    "id": "evt-001",
+    "title": "TechConf 2025",
+    "description": "La grande conférence tech annuelle qui réunit développeurs, designers et product managers autour des dernières innovations. Deux jours d'ateliers, de keynotes et de networking intense.",
+    "startDate": "2025-06-10T09:00:00Z",
+    "endDate": "2025-06-11T18:00:00Z",
+    "location": "Paris, Palais des Congrès",
+    "sessions": [
+      {
+        "id": "sess-001",
+        "title": "Keynote d'ouverture",
+        "startTime": "2025-06-10T09:00:00Z",
+        "endTime": "2025-06-10T10:00:00Z",
+        "room": {
+          "id": "room-a",
+          "name": "Amphi A"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-001",
+            "fullName": "Alice Martin",
+            "photoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "sess-002",
+        "title": "React 19 — Ce qui change vraiment",
+        "startTime": "2025-06-10T10:30:00Z",
+        "endTime": "2025-06-10T11:30:00Z",
+        "room": {
+          "id": "room-b",
+          "name": "Salle Horizon"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-002",
+            "fullName": "Thomas Leroy",
+            "photoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "sess-003",
+        "title": "Architecture serverless à grande échelle",
+        "startTime": "2025-06-10T11:45:00Z",
+        "endTime": "2025-06-10T12:45:00Z",
+        "room": {
+          "id": "room-a",
+          "name": "Amphi A"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-003",
+            "fullName": "Camille Dubois",
+            "photoUrl": null
+          },
+          {
+            "id": "spk-004",
+            "fullName": "Nico Ferreira",
+            "photoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "sess-004",
+        "title": "IA générative pour le product design",
+        "startTime": "2025-06-10T14:00:00Z",
+        "endTime": "2025-06-10T15:00:00Z",
+        "room": {
+          "id": "room-c",
+          "name": "Studio C"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-005",
+            "fullName": "Sarah Nguyen",
+            "photoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "sess-005",
+        "title": "Panel : L'avenir du web décentralisé",
+        "startTime": "2025-06-10T15:30:00Z",
+        "endTime": "2025-06-10T17:00:00Z",
+        "room": {
+          "id": "room-a",
+          "name": "Amphi A"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-001",
+            "fullName": "Alice Martin",
+            "photoUrl": null
+          },
+          {
+            "id": "spk-002",
+            "fullName": "Thomas Leroy",
+            "photoUrl": null
+          },
+          {
+            "id": "spk-003",
+            "fullName": "Camille Dubois",
+            "photoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "sess-006",
+        "title": "Sécurité des APIs REST en production",
+        "startTime": "2025-06-11T09:30:00Z",
+        "endTime": "2025-06-11T10:30:00Z",
+        "room": {
+          "id": "room-b",
+          "name": "Salle Horizon"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-004",
+            "fullName": "Nico Ferreira",
+            "photoUrl": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "evt-002",
+    "title": "Design Summit 2025",
+    "description": "Un événement dédié à l'UX, au design système et aux nouvelles pratiques de conception centrée utilisateur. Pour les designers qui veulent aller plus loin.",
+    "startDate": "2025-07-15T09:00:00Z",
+    "endDate": "2025-07-15T18:00:00Z",
+    "location": "Lyon, Centre de Congrès",
+    "sessions": [
+      {
+        "id": "sess-101",
+        "title": "Design Systems à l'échelle",
+        "startTime": "2025-07-15T09:30:00Z",
+        "endTime": "2025-07-15T10:30:00Z",
+        "room": {
+          "id": "room-x",
+          "name": "Grande Salle"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-005",
+            "fullName": "Sarah Nguyen",
+            "photoUrl": null
+          }
+        ]
+      },
+      {
+        "id": "sess-102",
+        "title": "Prototyper avec l'IA",
+        "startTime": "2025-07-15T11:00:00Z",
+        "endTime": "2025-07-15T12:00:00Z",
+        "room": {
+          "id": "room-y",
+          "name": "Atelier Y"
+        },
+        "isLive": false,
+        "speakers": [
+          {
+            "id": "spk-001",
+            "fullName": "Alice Martin",
+            "photoUrl": null
+          }
+        ]
+      }
+    ]
+  }
+]
