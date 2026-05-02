@@ -1,4 +1,4 @@
-import { createSessionQuestionService, getSessionQuestionsService } from "../services/session.service.js";
+import { createSessionQuestionService, getSessionQuestionsService, upvoteQUestionService } from "../services/session.service.js";
 
 
 export const getSessionQuestionsController = async(req, res) => {
@@ -23,5 +23,17 @@ export const createSessionQuestionController = async(req, res) => {
         return res.status(400).json({ error: "Question is required" });
     }
     const questionRequest = await createSessionQuestionService(sessionId, question);
+    return res.status(200).json(questionRequest);
+}
+
+export const upvoteQuestionController = async(req, res) => {
+    const { sessionId, questionId } = req.params;
+    if(!sessionId) {
+        return res.status(400).json({ error: "Session ID is required" });
+    }
+    if(!questionId) {
+        return res.status(400).json({ error: "Question ID is required" });
+    }
+    const questionRequest = await upvoteQUestionService(questionId, sessionId);
     return res.status(200).json(questionRequest);
 }

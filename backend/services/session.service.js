@@ -35,3 +35,25 @@ export const createSessionQuestionService = async (sessionId, question) => {
         throw error;
     }
 }
+
+export const upvoteQUestionService = async (questionId, sessionId) => {
+    try {
+        const sessionQuery = "SELECT * FROM sessions WHERE id = $1";
+        const sessionRequest = await pool.query(sessionQuery, [sessionId]);
+        if(sessionRequest.rowCount === 0) {
+            throw new Error("Session not found");
+        }
+        const questionQuery = "SELECT * FROM questions WHERE id = $1";
+        const questionRequest = await pool.query(questionQuery, [questionId]);
+        if(questionRequest.rowCount === 0) {
+            throw new Error("Question not found");
+        }
+        const upvoteQuery = "UPDATE questions SET upvotes = upvotes + 1 WHERE id = $1 RETURNING *";
+        const upvoteRequest = await pool.query(upvoteQuery, [questionId]);
+        return upvoteRequest.rows[0];
+        
+    } catch (error) {
+        throw error;
+        
+    }
+}
