@@ -7,7 +7,7 @@ export const getSessionQuestionsService = async (sessionId) => {
         if(sessionRequest.rowCount === 0) {
             throw new Error("Session not found");
         }
-        const getQUestionsQuery = "SELECT * FROM questions WHERE session_id = $1";
+        const getQUestionsQuery = "SELECT * FROM questions WHERE session_id = $1 ORDER BY upvotes DESC";
         const questionRequest = await pool.query(getQUestionsQuery, [sessionId]);
         return questionRequest.rows;
         
