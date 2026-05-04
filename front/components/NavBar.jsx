@@ -1,65 +1,125 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { motion } from "framer-motion"
+import { Calendar, Users, Star, Menu, X } from "lucide-react"
+import { useState } from "react"
+import { cn } from "@/lib/utils"
 
-export default function NavBar() {
-  const pathname = usePathname();
+const navItems = [
+  { href: "/events", label: "Events", icon: Calendar },
+  { href: "/speakers", label: "Speakers", icon: Users },
+  { href: "/favorites", label: "Favorites", icon: Star },
+]
+
+export function NavBar() {
+  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "rgba(6,12,24,0.75)",
-          backdropFilter: "blur(20px) saturate(140%)",
-          WebkitBackdropFilter: "blur(20px) saturate(140%)",
-          borderBottom: "1px solid rgba(200,218,248,0.06)",
-        }}
-      />
-      <div className="relative max-w-5xl mx-auto px-5 h-[52px] flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" className="opacity-75 group-hover:opacity-100 transition-opacity">
-            <path d="M15.5 10.5A7 7 0 0 1 7.5 2.5a7 7 0 1 0 8 8z" fill="rgba(200,218,248,0.9)" />
-          </svg>
-          <span className="text-[13px] font-medium" style={{ color:"rgba(215,228,250,0.88)", letterSpacing:"0.06em" }}>
-            EventSync
-          </span>
-        </Link>
-
-        <nav className="hidden sm:flex items-center gap-0.5">
-          {[
-            { href: "/events",    label: "Événements" },
-            { href: "/speakers",  label: "Intervenants" },
-            { href: "/favorites", label: "Favoris" },
-          ].map(({ href, label }) => {
-            const active = pathname.startsWith(href);
-            return (
-              <Link key={href} href={href}
-                className="relative px-3.5 py-1.5 rounded-lg text-[12px] transition-all duration-200"
-                style={{
-                  color: active ? "rgba(215,228,250,0.92)" : "rgba(160,178,215,0.42)",
-                  background: active ? "rgba(200,218,248,0.06)" : "transparent",
-                  letterSpacing: "0.03em",
-                }}
+    <motion.header
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="fixed top-0 left-0 right-0 z-50"
+    >
+      <nav className="mx-4 mt-4">
+        <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link href="/events" className="flex items-center gap-2 group">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-1"
               >
-                {label}
-                {active && (
-                  <span className="absolute inset-x-3 bottom-0.5 h-px rounded-full"
-                    style={{ background: "rgba(200,218,248,0.25)" }} />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+                <span className="text-xl font-bold text-foreground tracking-tight">
+                  Event
+                </span>
+                <span className="text-xl font-bold text-secondary tracking-tight">
+                  Sync
+                </span>
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-2 h-2 rounded-full bg-secondary ml-1"
+                />
+              </motion.div>
+            </Link>
 
-        <Link href="/admin/login"
-          className="text-[11px] px-3 py-1.5 rounded-lg transition-all duration-200"
-          style={{ border:"1px solid rgba(200,218,248,0.09)", color:"rgba(160,178,215,0.38)", letterSpacing:"0.04em" }}
-        >
-          Admin
-        </Link>
-      </div>
-    </header>
-  );
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => {
+                const isActive = pathname.startsWith(item.href)
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "relative px-4 py-2 rounded-xl text-sm font-medium transition-colors",
+                      isActive
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNav"
+                        className="absolute inset-0 bg-primary/20 rounded-xl"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      <Icon className="w-4 h-4" />
+                      {item.label}
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+
+          {/* Mobile Navigation */}
+          <motion.div
+            initial={false}
+            animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden overflow-hidden"
+          >
+            <div className="pt-4 pb-2 space-y-1">
+              {navItems.map((item) => {
+                const isActive = pathname.startsWith(item.href)
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-primary/20 text-foreground"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    )}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {item.label}
+                  </Link>
+                )
+              })}
+            </div>
+          </motion.div>
+        </div>
+      </nav>
+    </motion.header>
+  )
 }

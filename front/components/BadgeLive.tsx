@@ -1,32 +1,33 @@
-"use client";
+"use client"
+
+import { motion } from "framer-motion"
 
 interface BadgeLiveProps {
-  size?: "sm" | "md" | "lg";
+  className?: string
 }
 
-export default function BadgeLive({ size = "md" }: BadgeLiveProps) {
-  const sizes = {
-    sm: "px-1.5 py-0.5 text-[9px] gap-1.5",
-    md: "px-2 py-1 text-[10px] gap-1.5",
-    lg: "px-2.5 py-1 text-xs gap-2",
-  };
-  const dot = { sm: "w-1.5 h-1.5", md: "w-1.5 h-1.5", lg: "w-2 h-2" };
-
+export function BadgeLive({ className }: BadgeLiveProps) {
   return (
-    <span
-      className={`inline-flex items-center ${sizes[size]} rounded-full font-semibold uppercase tracking-widest`}
-      style={{
-        background: "rgba(220,55,45,0.18)",
-        border: "1px solid rgba(220,55,45,0.35)",
-        color: "rgba(255,130,120,0.92)",
-        letterSpacing: "0.1em",
-      }}
+    <motion.div
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-500/20 border border-red-500/30 rounded-full ${className}`}
     >
-      <span className={`relative flex ${dot[size]}`}>
-        <span className={`absolute ${dot[size]} rounded-full bg-red-400 opacity-60 animate-ping`} />
-        <span className={`${dot[size]} rounded-full bg-red-400`} />
+      <motion.span
+        animate={{ 
+          scale: [1, 1.3, 1],
+          opacity: [1, 0.7, 1]
+        }}
+        transition={{ 
+          duration: 1.5, 
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="w-2 h-2 rounded-full bg-red-500"
+      />
+      <span className="text-xs font-semibold text-red-400 uppercase tracking-wider">
+        Live
       </span>
-      Live
-    </span>
-  );
+    </motion.div>
+  )
 }
