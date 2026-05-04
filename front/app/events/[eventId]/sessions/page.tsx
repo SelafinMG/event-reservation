@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { getSessionById, getEventById } from "@/lib/mockApi"
-import { SessionDetailClient } from "./session-detail-client"
+import { SessionDetailClient } from "./SessionDetailClient"
 
 interface SessionDetailPageProps {
   params: Promise<{ eventId: string; sessionId: string }>

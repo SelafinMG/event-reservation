@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import { Star, Calendar } from "lucide-react"
 import type { Session } from "@/lib/types"
 import { getFavoriteSessions } from "@/lib/mockApi"
-import { SessionCard } from "@/components/session-card"
+import { SessionCard } from "@/components/SessionCard"
 
 export default function FavoritesPage() {
   const [sessions, setSessions] = useState<Session[]>([])

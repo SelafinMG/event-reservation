@@ -6,7 +6,7 @@ import Link from "next/link"
 import Image from "next/image"
 import type { Session, Event } from "@/lib/types"
 import { BadgeLive } from "@/components/BadgeLive"
-import { QuestionSection } from "@/components/question-section"
+import { QuestionSection } from "@/components/QuestionSection"
 import { useState, useEffect } from "react"
 import { isFavorite, addFavorite, removeFavorite } from "@/lib/mockApi"
 
