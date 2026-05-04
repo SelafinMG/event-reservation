@@ -1,168 +1,266 @@
-/**
- * EventSync — Mock API Layer
- * Simule les appels API de la spec OAS3.
- * À remplacer par de vrais fetch() vers https://api.eventsync.io/v1
- */
+import type { Event, SessionSummary, Session, Speaker, Question, Room } from "@/lib/types"
 
-import events from "@/data/events.json";
-import sessions from "@/data/sessions.json";
-import speakers from "@/data/speakers.json";
-import questions from "@/data/questions.json";
+// Simule une API avec des données en mémoire
+import eventsData from '@/data/events.json'
+import sessionsData from '@/data/sessions.json'
+import speakersData from '@/data/speakers.json'
+import questionsData from '@/data/questions.json'
+import roomsData from '@/data/rooms.json'
 
-// ── Types ─────────────────────────────────────────────────────────────────
+// Simule un délai réseau
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-export interface Room {
-  id: string;
-  name: string;
+// Vérifie si une session est live
+function isSessionLive(startTime: string, endTime: string): boolean {
+  const now = new Date()
+  const start = new Date(startTime)
+  const end = new Date(endTime)
+  return now >= start && now <= end
 }
 
-export interface SpeakerSummary {
-  id: string;
-  fullName: string;
-  photoUrl: string | null;
+// Récupère une room par ID
+function getRoomById(roomId: string): Room {
+  const room = roomsData.find(r => r.id === roomId)
+  return room || { id: roomId, name: 'Unknown Room' }
 }
 
-export interface Speaker extends SpeakerSummary {
-  bio: string;
-  links: { type: string; url: string }[];
-  sessions: SessionSummary[];
+// Récupère les speakers par leurs IDs
+function getSpeakerSummariesByIds(speakerIds: string[]): SpeakerSummary[] {
+  return speakerIds.map(id => {
+    const speaker = speakersData.find(s => s.id === id)
+    return speaker 
+      ? { id: speaker.id, fullName: speaker.fullName, photoUrl: speaker.photoUrl }
+      : { id, fullName: 'Unknown Speaker' }
+  })
 }
 
-export interface SessionSummary {
-  id: string;
-  title: string;
-  startTime: string;
-  endTime: string;
-  room: Room;
-  isLive: boolean;
-  speakers: SpeakerSummary[];
-}
-
-export interface Session extends SessionSummary {
-  eventId: string;
-  description: string;
-  capacity: number;
-  questions: Question[];
-}
-
-export interface Event {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-  sessions: SessionSummary[];
-}
-
-export interface Question {
-  id: string;
-  sessionId: string;
-  content: string;
-  authorName: string | null;
-  upvotes: number;
-  createdAt: string;
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────
-
-/**
- * Calcule isLive côté client à partir de la date locale.
- * En production, ce flag vient du serveur.
- * Pour tester : modifiez startTime/endTime dans sessions.json
- * à ±30 minutes autour de now.
- */
-export function computeIsLive(startTime: string, endTime: string): boolean {
-  const now = new Date();
-  return new Date(startTime) <= now && now <= new Date(endTime);
-}
-
-export function formatTime(iso: string): string {
-  return new Date(iso).toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-export function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-export function formatDateShort(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "short",
-  });
-}
-
-// ── Mock API ──────────────────────────────────────────────────────────────
-
-/** GET /events */
-export function getEvents(): Event[] {
-  return (events as Event[]).map((evt) => ({
-    ...evt,
-    sessions: evt.sessions.map((s) => ({
-      ...s,
-      isLive: computeIsLive(s.startTime, s.endTime),
-    })),
-  }));
-}
-
-/** GET /events/:id */
-export function getEvent(id: string): Event | null {
-  const evt = (events as Event[]).find((e) => e.id === id);
-  if (!evt) return null;
+// Transforme les données brutes de session en SessionSummary
+function toSessionSummary(sessionRaw: typeof sessionsData[0]): SessionSummary {
   return {
-    ...evt,
-    sessions: evt.sessions.map((s) => ({
-      ...s,
-      isLive: computeIsLive(s.startTime, s.endTime),
-    })),
-  };
+    id: sessionRaw.id,
+    title: sessionRaw.title,
+    startTime: sessionRaw.startTime,
+    endTime: sessionRaw.endTime,
+    room: getRoomById(sessionRaw.roomId),
+    isLive: isSessionLive(sessionRaw.startTime, sessionRaw.endTime),
+    speakers: getSpeakerSummariesByIds(sessionRaw.speakerIds)
+  }
 }
 
-/** GET /events/:eventId/sessions */
-export function getEventSessions(
-  eventId: string,
-  roomId?: string
-): SessionSummary[] {
-  let list = (sessions as unknown as Session[]).filter((s) => s.eventId === eventId);
-  if (roomId) list = list.filter((s) => s.room.id === roomId);
-  return list.map((s) => ({ ...s, isLive: computeIsLive(s.startTime, s.endTime) }));
-}
+// Transforme les données brutes de session en Session complète
+function toSession(sessionRaw: typeof sessionsData[0]): Session {
+  const sessionQuestions = questionsData
+    .filter(q => q.sessionId === sessionRaw.id)
+    .sort((a, b) => b.upvotes - a.upvotes)
 
-/** GET /sessions/:id */
-export function getSession(id: string): Session | null {
-  const s = (sessions as unknown as Session[]).find((s) => s.id === id);
-  if (!s) return null;
-  const sessionQuestions = (questions as Question[])
-    .filter((q) => q.sessionId === id)
-    .sort((a, b) => b.upvotes - a.upvotes);
   return {
-    ...s,
-    isLive: computeIsLive(s.startTime, s.endTime),
-    questions: sessionQuestions,
-  };
+    id: sessionRaw.id,
+    eventId: sessionRaw.eventId,
+    title: sessionRaw.title,
+    description: sessionRaw.description,
+    startTime: sessionRaw.startTime,
+    endTime: sessionRaw.endTime,
+    room: getRoomById(sessionRaw.roomId),
+    capacity: sessionRaw.capacity,
+    isLive: isSessionLive(sessionRaw.startTime, sessionRaw.endTime),
+    speakers: getSpeakerSummariesByIds(sessionRaw.speakerIds),
+    questions: sessionQuestions
+  }
 }
 
-/** GET /speakers */
-export function getSpeakers(): Speaker[] {
-  return speakers as Speaker[];
+// ═══════════════════════════════════════════════════════════════
+// API EVENTS
+// ═══════════════════════════════════════════════════════════════
+
+export async function getEvents(): Promise<Event[]> {
+  await delay(100)
+  return eventsData.map(event => ({
+    ...event,
+    sessions: sessionsData
+      .filter(s => s.eventId === event.id)
+      .map(toSessionSummary)
+  }))
 }
 
-/** GET /speakers/:id */
-export function getSpeaker(id: string): Speaker | null {
-  return (speakers as Speaker[]).find((s) => s.id === id) ?? null;
+export async function getEventById(eventId: string): Promise<Event | null> {
+  await delay(100)
+  const event = eventsData.find(e => e.id === eventId)
+  if (!event) return null
+  
+  return {
+    ...event,
+    sessions: sessionsData
+      .filter(s => s.eventId === eventId)
+      .map(toSessionSummary)
+  }
 }
 
-/** GET /sessions/:sessionId/questions */
-export function getSessionQuestions(sessionId: string): Question[] {
-  return (questions as Question[])
-    .filter((q) => q.sessionId === sessionId)
-    .sort((a, b) => b.upvotes - a.upvotes);
+// ═══════════════════════════════════════════════════════════════
+// API SESSIONS
+// ═══════════════════════════════════════════════════════════════
+
+export async function getSessionsByEventId(
+  eventId: string, 
+  options?: { roomId?: string; live?: boolean }
+): Promise<SessionSummary[]> {
+  await delay(100)
+  let sessions = sessionsData.filter(s => s.eventId === eventId)
+  
+  if (options?.roomId) {
+    sessions = sessions.filter(s => s.roomId === options.roomId)
+  }
+  
+  const summaries = sessions.map(toSessionSummary)
+  
+  if (options?.live) {
+    return summaries.filter(s => s.isLive)
+  }
+  
+  return summaries
+}
+
+export async function getSessionById(sessionId: string): Promise<Session | null> {
+  await delay(100)
+  const session = sessionsData.find(s => s.id === sessionId)
+  if (!session) return null
+  return toSession(session)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API SPEAKERS
+// ═══════════════════════════════════════════════════════════════
+
+export async function getSpeakers(): Promise<Speaker[]> {
+  await delay(100)
+  return speakersData.map(speaker => ({
+    ...speaker,
+    links: speaker.links as Speaker['links'],
+    sessions: sessionsData
+      .filter(s => s.speakerIds.includes(speaker.id))
+      .map(toSessionSummary)
+  }))
+}
+
+export async function getSpeakerById(speakerId: string): Promise<Speaker | null> {
+  await delay(100)
+  const speaker = speakersData.find(s => s.id === speakerId)
+  if (!speaker) return null
+  
+  return {
+    ...speaker,
+    links: speaker.links as Speaker['links'],
+    sessions: sessionsData
+      .filter(s => s.speakerIds.includes(speakerId))
+      .map(toSessionSummary)
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API QUESTIONS
+// ═══════════════════════════════════════════════════════════════
+
+export async function getQuestionsBySessionId(sessionId: string): Promise<Question[]> {
+  await delay(100)
+  return questionsData
+    .filter(q => q.sessionId === sessionId)
+    .sort((a, b) => b.upvotes - a.upvotes)
+}
+
+// Variable pour stocker les nouvelles questions (en mémoire)
+let localQuestions = [...questionsData]
+
+export async function addQuestion(
+  sessionId: string, 
+  input: { content: string; authorName?: string | null }
+): Promise<Question | { error: string }> {
+  await delay(200)
+  
+  const session = sessionsData.find(s => s.id === sessionId)
+  if (!session) {
+    return { error: 'Session not found' }
+  }
+  
+  // Vérifier si la session est live (commenté pour la démo)
+  // if (!isSessionLive(session.startTime, session.endTime)) {
+  //   return { error: 'SESSION_NOT_LIVE' }
+  // }
+  
+  const newQuestion: Question = {
+    id: `q-${Date.now()}`,
+    sessionId,
+    content: input.content,
+    authorName: input.authorName || null,
+    upvotes: 0,
+    createdAt: new Date().toISOString()
+  }
+  
+  localQuestions.push(newQuestion)
+  return newQuestion
+}
+
+export async function upvoteQuestion(
+  sessionId: string, 
+  questionId: string
+): Promise<Question | { error: string }> {
+  await delay(100)
+  
+  const questionIndex = localQuestions.findIndex(
+    q => q.id === questionId && q.sessionId === sessionId
+  )
+  
+  if (questionIndex === -1) {
+    return { error: 'Question not found' }
+  }
+  
+  localQuestions[questionIndex] = {
+    ...localQuestions[questionIndex],
+    upvotes: localQuestions[questionIndex].upvotes + 1
+  }
+  
+  return localQuestions[questionIndex]
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API ROOMS
+// ═══════════════════════════════════════════════════════════════
+
+export async function getRoomsByEventId(eventId: string): Promise<Room[]> {
+  await delay(100)
+  // Pour la démo, retourner toutes les rooms
+  return roomsData
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FAVORIS (localStorage côté client)
+// ═══════════════════════════════════════════════════════════════
+
+export function getFavorites(): string[] {
+  if (typeof window === 'undefined') return []
+  const favorites = localStorage.getItem('eventsync-favorites')
+  return favorites ? JSON.parse(favorites) : []
+}
+
+export function addFavorite(sessionId: string): void {
+  const favorites = getFavorites()
+  if (!favorites.includes(sessionId)) {
+    favorites.push(sessionId)
+    localStorage.setItem('eventsync-favorites', JSON.stringify(favorites))
+  }
+}
+
+export function removeFavorite(sessionId: string): void {
+  const favorites = getFavorites().filter(id => id !== sessionId)
+  localStorage.setItem('eventsync-favorites', JSON.stringify(favorites))
+}
+
+export function isFavorite(sessionId: string): boolean {
+  return getFavorites().includes(sessionId)
+}
+
+export async function getFavoriteSessions(): Promise<Session[]> {
+  const favoriteIds = getFavorites()
+  const sessions = await Promise.all(
+    favoriteIds.map(id => getSessionById(id))
+  )
+  return sessions.filter((s): s is Session => s !== null)
 }
