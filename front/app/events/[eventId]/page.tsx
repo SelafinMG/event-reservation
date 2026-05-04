@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getEvent } from "@/lib/mockApi";
-import { formatDateShort, formatTime } from "@/lib/mockApi";
+import { formatDateShort } from "@/lib/mockApi";
 import SessionCard from "@/components/SessionCard";
 import BadgeLive from "@/components/BadgeLive";
 import MultiTrackGrid from "@/components/MultiTrackGrid";
