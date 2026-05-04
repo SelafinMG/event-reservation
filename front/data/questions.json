@@ -2,33 +2,57 @@
   {
     "id": "q-001",
     "sessionId": "sess-002",
-    "content": "Quelles sont les breaking changes les plus impactantes de React 19 ?",
+    "content": "Quelles sont les breaking changes majeures de React 19 ?",
     "authorName": "Marie D.",
-    "upvotes": 24,
-    "createdAt": "2025-06-10T10:45:00Z"
+    "upvotes": 42,
+    "createdAt": "2025-06-10T10:35:00Z"
   },
   {
     "id": "q-002",
     "sessionId": "sess-002",
-    "content": "Est-ce que les Server Components sont compatibles avec React Native ?",
-    "authorName": null,
-    "upvotes": 17,
-    "createdAt": "2025-06-10T10:52:00Z"
+    "content": "Comment migrer progressivement de React 18 vers 19 ?",
+    "authorName": "Pierre L.",
+    "upvotes": 28,
+    "createdAt": "2025-06-10T10:40:00Z"
   },
   {
     "id": "q-003",
     "sessionId": "sess-002",
-    "content": "Comment gérer le state global avec les Server Components ? Zustand fonctionne-t-il toujours ?",
-    "authorName": "Lucas P.",
-    "upvotes": 11,
-    "createdAt": "2025-06-10T11:00:00Z"
+    "content": "Les Server Components sont-ils prêts pour la production ?",
+    "authorName": null,
+    "upvotes": 35,
+    "createdAt": "2025-06-10T10:45:00Z"
   },
   {
     "id": "q-004",
-    "sessionId": "sess-002",
-    "content": "Quand est-ce qu'il faut choisir entre use() hook et useEffect classique ?",
+    "sessionId": "sess-003",
+    "content": "Quel framework ML recommandez-vous pour débuter ?",
+    "authorName": "Sophie M.",
+    "upvotes": 15,
+    "createdAt": "2025-06-10T11:00:00Z"
+  },
+  {
+    "id": "q-005",
+    "sessionId": "sess-003",
+    "content": "Comment évaluer la performance d'un modèle de classification ?",
     "authorName": null,
-    "upvotes": 8,
-    "createdAt": "2025-06-10T11:08:00Z"
+    "upvotes": 22,
+    "createdAt": "2025-06-10T11:15:00Z"
+  },
+  {
+    "id": "q-006",
+    "sessionId": "sess-005",
+    "content": "Quelle est la différence entre un Deployment et un StatefulSet ?",
+    "authorName": "Alex K.",
+    "upvotes": 18,
+    "createdAt": "2025-06-10T15:45:00Z"
+  },
+  {
+    "id": "q-007",
+    "sessionId": "sess-007",
+    "content": "Quel est le coût d'inférence moyen pour un LLM en production ?",
+    "authorName": "Julie R.",
+    "upvotes": 31,
+    "createdAt": "2025-06-11T10:50:00Z"
   }
 ]

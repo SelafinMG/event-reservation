@@ -1,0 +1,6 @@
+[
+  { "id": "room-a", "name": "Amphi A - Grand Auditorium" },
+  { "id": "room-b", "name": "Salle B - Workshop" },
+  { "id": "room-c", "name": "Salle C - Conférence" },
+  { "id": "room-d", "name": "Salle D - Lab" }
+]
