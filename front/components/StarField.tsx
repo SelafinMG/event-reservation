@@ -1,75 +1,24 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-
 export function StarField() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-    resizeCanvas()
-    window.addEventListener("resize", resizeCanvas)
-
-    // Create stars
-    const stars: { x: number; y: number; size: number; speed: number; opacity: number }[] = []
-    for (let i = 0; i < 150; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 1.5 + 0.5,
-        speed: Math.random() * 0.3 + 0.1,
-        opacity: Math.random() * 0.5 + 0.3,
-      })
-    }
-
-    let animationId: number
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      stars.forEach((star) => {
-        ctx.beginPath()
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`
-        ctx.fill()
-
-        // Move star
-        star.y += star.speed
-        if (star.y > canvas.height) {
-          star.y = 0
-          star.x = Math.random() * canvas.width
-        }
-
-        // Twinkle
-        star.opacity += (Math.random() - 0.5) * 0.02
-        star.opacity = Math.max(0.2, Math.min(0.8, star.opacity))
-      })
-
-      animationId = requestAnimationFrame(animate)
-    }
-
-    animate()
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas)
-      cancelAnimationFrame(animationId)
-    }
-  }, [])
-
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.6 }}
-    />
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
+      {/* Static stars with CSS */}
+      <div className="absolute inset-0" style={{
+        backgroundImage: `
+          radial-gradient(1px 1px at 20px 30px, white, transparent),
+          radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
+          radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.6), transparent),
+          radial-gradient(1px 1px at 90px 40px, white, transparent),
+          radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.7), transparent),
+          radial-gradient(1.5px 1.5px at 160px 120px, white, transparent),
+          radial-gradient(1px 1px at 200px 50px, rgba(255,255,255,0.5), transparent),
+          radial-gradient(1px 1px at 220px 150px, white, transparent),
+          radial-gradient(1px 1px at 280px 90px, rgba(255,255,255,0.8), transparent),
+          radial-gradient(1.5px 1.5px at 320px 20px, white, transparent)
+        `,
+        backgroundSize: '350px 200px'
+      }} />
+    </div>
   )
 }
