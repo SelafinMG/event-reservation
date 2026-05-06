@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { NavBar } from '@/components/NavBar'
+import NavBar from '@/components/NavBar'
 import { StarField } from '@/components/StarField'
 import './globals.css'
 
