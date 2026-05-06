@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { getSessionById, getEventById } from "@/lib/mockApi"
-import { SessionDetailClient } from "./[sessionId]/SessionDetailClient"
+import { SessionDetailClient } from "./SessionDetailClient"
 
 interface SessionDetailPageProps {
   params: Promise<{ eventId: string; sessionId: string }>
@@ -8,10 +8,10 @@ interface SessionDetailPageProps {
 
 export default async function SessionDetailPage({ params }: SessionDetailPageProps) {
   const { eventId, sessionId } = await params
-  
+
   const [session, event] = await Promise.all([
     getSessionById(sessionId),
-    getEventById(eventId)
+    getEventById(eventId),
   ])
 
   if (!session || !event) {

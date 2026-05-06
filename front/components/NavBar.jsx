@@ -1,99 +1,74 @@
-"use client"
-
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Calendar, Users, Star, Menu, X } from "lucide-react"
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-
-const navItems = [
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/users", label: "Users", icon: Users },
-  { href: "/favorites", label: "Favorites", icon: Star },
-]
+"use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function NavBar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
-
+  const pathname = usePathname();
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 animate-in fade-in slide-in-from-top-4 duration-500">
-      <nav className="mx-4 mt-4">
-        <div className="max-w-7xl mx-auto bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl px-6 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/events" className="flex items-center gap-2 group">
-              <div className="flex items-center gap-1 transition-transform hover:scale-105">
-                <span className="text-xl font-bold text-foreground tracking-tight">
-                  Event
-                </span>
-                <span className="text-xl font-bold text-secondary tracking-tight">
-                  Sync
-                </span>
-                <span className="w-2 h-2 rounded-full bg-secondary ml-1 animate-pulse" />
-              </div>
-            </Link>
+    <header style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+      height: "60px",
+      background: "rgba(7,7,9,0.75)",
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+      borderBottom: "1px solid rgba(255,255,255,0.06)",
+    }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", height: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-4">
-              {navItems.map((item) => {
-                const isActive = pathname.startsWith(item.href)
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
-                      isActive
-                        ? "text-foreground bg-primary/20"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    )}
-                  >
-                    <span className="flex items-center gap-2">
-                      <Icon className="w-4 h-4" />
-                      {item.label}
-                    </span>
-                  </Link>
-                )
-              })}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-muted/50 transition-colors"
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+        {/* Logo */}
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+          <div style={{
+            width: "30px", height: "30px", borderRadius: "8px",
+            background: "linear-gradient(135deg,#1d4ed8,#2563eb)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 0 16px rgba(37,99,235,0.5)",
+          }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="white" />
+            </svg>
           </div>
+          <span style={{
+            fontFamily: "Syne, sans-serif",
+            fontWeight: 700, fontSize: "17px",
+            color: "rgba(255,255,255,0.95)",
+            letterSpacing: "-0.02em",
+          }}>
+            EventSync
+          </span>
+        </Link>
 
-          {/* Mobile Navigation */}
-          {isOpen && (
-            <div className="md:hidden pt-4 pb-2 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
-              {navItems.map((item) => {
-                const isActive = pathname.startsWith(item.href)
-                const Icon = item.icon
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
-                      isActive
-                        ? "text-foreground bg-primary/20"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    )}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
-                  </Link>
-                )
-              })}
-            </div>
-          )}
-        </div>
-      </nav>
+        {/* Nav */}
+        <nav style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          {[
+            { href: "/events", label: "Événements" },
+            { href: "/speakers", label: "Intervenants" },
+            { href: "/favorites", label: "Favoris" },
+          ].map(({ href, label }) => {
+            const active = pathname.startsWith(href);
+            return (
+              <Link key={href} href={href} style={{
+                padding: "6px 14px", borderRadius: "100px",
+                fontSize: "13px", fontWeight: active ? 500 : 400,
+                color: active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.45)",
+                background: active ? "rgba(255,255,255,0.08)" : "transparent",
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+                letterSpacing: "0.01em",
+              }}>
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* CTA */}
+        <Link href="/admin/login" className="btn-primary" style={{ textDecoration: "none" }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          Admin
+        </Link>
+      </div>
     </header>
-  )
+  );
 }
