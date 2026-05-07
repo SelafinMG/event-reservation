@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import sessionRoute from './routes/session.route.js';
 import authRoute from './routes/auth.route.js';
+import eventRoute from './routes/event.route.js';
 dotenv.config();
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use('/v1/sessions', sessionRoute);
 app.use('/v1/auth', authRoute);
+app.use('/v1/events', eventRoute); 
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ code: 'SERVER_ERROR', message: 'Internal server error.' });
