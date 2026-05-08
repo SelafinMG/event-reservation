@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import sessionRoute from './routes/session.route.js';
 import authRoute from './routes/auth.route.js';
 import eventRoute from './routes/event.route.js';
+import { roomsByEventRouter, roomsRouter } from './routes/room.route.js';
 dotenv.config();
 
 const app = express();
@@ -13,6 +14,8 @@ app.use(express.json());
 app.use('/v1/sessions', sessionRoute);
 app.use('/v1/auth', authRoute);
 app.use('/v1/events', eventRoute); 
+app.use('/v1/events/:eventId/rooms', roomsByEventRouter);
+app.use('/v1/rooms', roomsRouter);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ code: 'SERVER_ERROR', message: 'Internal server error.' });
