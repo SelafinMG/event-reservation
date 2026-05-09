@@ -1,0 +1,71 @@
+[
+  {
+    "id": "spk-001",
+    "fullName": "Alice Martin",
+    "photoUrl": null,
+    "bio": "CTO de StackLab, Alice construit des plateformes cloud-native depuis 12 ans. Contributrice active à l'écosystème open-source, elle est co-autrice du livre « Distributed Systems at Scale ». Conférencière régulière en Europe et aux États-Unis.",
+    "links": [
+      { "type": "twitter", "url": "https://twitter.com/alicemartin" },
+      { "type": "github", "url": "https://github.com/alicemartin" },
+      { "type": "website", "url": "https://alicemartin.dev" }
+    ],
+    "sessions": [
+      { "id": "sess-001", "title": "Keynote d'ouverture", "startTime": "2025-06-10T09:00:00Z", "endTime": "2025-06-10T10:00:00Z", "room": { "id": "room-a", "name": "Amphi A" }, "isLive": false },
+      { "id": "sess-005", "title": "Panel : L'avenir du web décentralisé", "startTime": "2025-06-10T15:30:00Z", "endTime": "2025-06-10T17:00:00Z", "room": { "id": "room-a", "name": "Amphi A" }, "isLive": false }
+    ]
+  },
+  {
+    "id": "spk-002",
+    "fullName": "Thomas Leroy",
+    "photoUrl": null,
+    "bio": "Lead Engineer chez Mango (scale-up fintech), Thomas est obsédé par la performance des applications React. Il maintient plusieurs bibliothèques open-source populaires et anime le podcast « JavaScript en français ».",
+    "links": [
+      { "type": "twitter", "url": "https://twitter.com/thomasleroy_js" },
+      { "type": "linkedin", "url": "https://linkedin.com/in/thomasleroy" }
+    ],
+    "sessions": [
+      { "id": "sess-002", "title": "React 19 — Ce qui change vraiment", "startTime": "2025-06-10T10:30:00Z", "endTime": "2025-06-10T11:30:00Z", "room": { "id": "room-b", "name": "Salle Horizon" }, "isLive": false }
+    ]
+  },
+  {
+    "id": "spk-003",
+    "fullName": "Camille Dubois",
+    "photoUrl": null,
+    "bio": "Architecte solutions chez CloudNine, Camille conçoit des infrastructures serverless pour des clients Fortune 500. Elle est certifiée AWS et Google Cloud, et anime des workshops sur l'architecture événementielle.",
+    "links": [
+      { "type": "linkedin", "url": "https://linkedin.com/in/camilledubois" },
+      { "type": "github", "url": "https://github.com/cdubois-arch" }
+    ],
+    "sessions": [
+      { "id": "sess-003", "title": "Architecture serverless à grande échelle", "startTime": "2025-06-10T11:45:00Z", "endTime": "2025-06-10T12:45:00Z", "room": { "id": "room-a", "name": "Amphi A" }, "isLive": false }
+    ]
+  },
+  {
+    "id": "spk-004",
+    "fullName": "Nico Ferreira",
+    "photoUrl": null,
+    "bio": "Security Engineer indépendant, Nico réalise des pentests et des audits de sécurité pour des startups et grands groupes. Il forme des équipes engineering aux bonnes pratiques OWASP et partage ses recherches sur son blog.",
+    "links": [
+      { "type": "twitter", "url": "https://twitter.com/nicoferreira_sec" },
+      { "type": "website", "url": "https://nicoferreira.io" }
+    ],
+    "sessions": [
+      { "id": "sess-003", "title": "Architecture serverless à grande échelle", "startTime": "2025-06-10T11:45:00Z", "endTime": "2025-06-10T12:45:00Z", "room": { "id": "room-a", "name": "Amphi A" }, "isLive": false },
+      { "id": "sess-006", "title": "Sécurité des APIs REST en production", "startTime": "2025-06-11T09:30:00Z", "endTime": "2025-06-11T10:30:00Z", "room": { "id": "room-b", "name": "Salle Horizon" }, "isLive": false }
+    ]
+  },
+  {
+    "id": "spk-005",
+    "fullName": "Sarah Nguyen",
+    "photoUrl": null,
+    "bio": "Head of Design chez Ritual (startup EdTech), Sarah explore l'intersection entre IA et design centré utilisateur. Elle mène des recherches sur l'augmentation des capacités créatives via les modèles génératifs.",
+    "links": [
+      { "type": "linkedin", "url": "https://linkedin.com/in/sarahnguyen" },
+      { "type": "twitter", "url": "https://twitter.com/sarah_designs" },
+      { "type": "website", "url": "https://sarah-nguyen.design" }
+    ],
+    "sessions": [
+      { "id": "sess-004", "title": "IA générative pour le product design", "startTime": "2025-06-10T14:00:00Z", "endTime": "2025-06-10T15:00:00Z", "room": { "id": "room-c", "name": "Studio C" }, "isLive": false }
+    ]
+  }
+]
