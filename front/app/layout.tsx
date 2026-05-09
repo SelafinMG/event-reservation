@@ -1,40 +1,62 @@
-import type { Metadata } from "next";
-import { Outfit, Lora } from "next/font/google";
-import "./globals.css";
-import NavBar from "@/components/NavBar";
-import NightSky from "@/components/NightSky";
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { Playfair_Display } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
+import NavBar from '@/components/NavBar'
+import { StarField } from '@/components/StarField'
+import './globals.css'
 
-const outfit = Outfit({
+const _geist = Geist({ 
   subsets: ["latin"],
-  variable: "--font-outfit",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: '--font-geist'
 });
-
-const lora = Lora({
+const _geistMono = Geist_Mono({ 
   subsets: ["latin"],
-  variable: "--font-lora",
-  style: ["normal", "italic"],
+  variable: '--font-geist-mono'
+});
+const playfair = Playfair_Display({ 
+  subsets: ["latin"],
+  variable: '--font-playfair'
 });
 
 export const metadata: Metadata = {
-  title: "EventSync — Plateforme d'événements",
-  description: "Naviguer dans vos événements en temps réel",
-};
+  title: 'EventSync - Engage Audiences Live',
+  description: 'Real-time event engagement platform. Interactive Q&A, live sessions, and seamless participant experience.',
+  generator: 'v0.app',
+  icons: {
+    icon: [
+      {
+        url: '/icon-light-32x32.png',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        url: '/icon-dark-32x32.png',
+        media: '(prefers-color-scheme: dark)',
+      },
+      {
+        url: '/icon.svg',
+        type: 'image/svg+xml',
+      },
+    ],
+    apple: '/apple-icon.png',
+  },
+}
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
-    <html lang="fr">
-      <body className={`${outfit.variable} ${lora.variable} font-sans bg-[#060c18] min-h-screen text-white`}>
-        <NightSky />
+    <html lang="en" className={`${_geist.variable} ${_geistMono.variable} ${playfair.variable}`}>
+      <body className="font-sans antialiased bg-background text-foreground min-h-screen">
+        <StarField />
         <NavBar />
-        <main className="relative z-10 pt-14 min-h-screen">
+        <main className="pt-24 pb-12 relative z-10">
           {children}
         </main>
+        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
-  );
+  )
 }
