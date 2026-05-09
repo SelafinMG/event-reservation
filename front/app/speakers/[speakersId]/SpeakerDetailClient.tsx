@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { ArrowLeft, Globe, Calendar } from "lucide-react"
-import { Github, Linkedin, Twitter } from "lucide-react"
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa"
 import Link from "next/link"
 import Image from "next/image"
 import type { Speaker } from "@/lib/types"
@@ -13,9 +13,9 @@ interface SpeakerDetailClientProps {
 }
 
 const socialIcons = {
-  twitter: Twitter,
-  linkedin: Linkedin,
-  github: Github,
+  twitter: FaTwitter,
+  linkedin: FaLinkedin,
+  github: FaGithub,
   website: Globe,
   other: Globe,
 }
@@ -100,7 +100,7 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
         </div>
       </motion.div>
 
-      {/* Sessions — FIX: eventId is now dynamic from session.eventId */}
+      {/* Sessions */}
       {speaker.sessions && speaker.sessions.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -115,9 +115,6 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
             {speaker.sessions.map((session, index) => {
               const startTime = new Date(session.startTime)
               const endTime = new Date(session.endTime)
-
-              // ✅ FIX: Use session.eventId if available, fallback gracefully
-              // You'll need to add eventId to SessionSummary type or enrich the API
               const sessionEventId = (session as any).eventId ?? "evt-001"
 
               return (
@@ -154,4 +151,4 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
       )}
     </div>
   )
-} 
+}
