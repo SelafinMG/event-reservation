@@ -11,7 +11,7 @@ function StatCard() {
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: 0.8, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="relative rounded-2xl overflow-hidden w-56"
+      className="relative rounded-2xl overflow-hidden w-full sm:w-56"
       style={{
         background: "linear-gradient(145deg, #1a2a4a 0%, #0f1a32 60%, #0a1220 100%)",
         border: "1px solid rgba(37,99,235,0.35)",
@@ -70,13 +70,12 @@ function FeatureChip({ icon: Icon, label }: { icon: React.ElementType; label: st
     </div>
   )
 }
-
 // ── Blob ──────────────────────────────────────────────────────────────────
 function Blob({ style, delay = 0 }: { style: React.CSSProperties; delay?: number }) {
   return (
     <motion.div
       className="absolute rounded-full pointer-events-none"
-      style={{ filter: "blur(80px)", ...style }}
+      style={{ filter: "blur(80px)", maxWidth: "500px", maxHeight: "500px", ...style }}
       animate={{ x: [0, 20, -10, 0], y: [0, -15, 10, 0], scale: [1, 1.05, 0.97, 1] }}
       transition={{ duration: 18, delay, repeat: Infinity, ease: "easeInOut" }}
     />
@@ -87,13 +86,31 @@ function Blob({ style, delay = 0 }: { style: React.CSSProperties; delay?: number
 export default function LandingPage() {
   return (
     <div
-      className="relative overflow-hidden"
-      style={{ background: "#070709", fontFamily: "'DM Sans', sans-serif", minHeight: "calc(100vh - 96px)" }}
+      className="relative overflow-hidden min-h-screen w-full"
+      style={{ background: "#070709", fontFamily: "'DM Sans', sans-serif" }}
     >
       {/* Blobs */}
-      <Blob style={{ top: "-10%", left: "-8%", width: "55vw", height: "55vw", background: "radial-gradient(circle at 40% 40%, rgba(29,78,216,0.55), rgba(37,99,235,0.2) 50%, transparent 70%)" }} delay={0} />
-      <Blob style={{ bottom: "-5%", right: "-5%", width: "45vw", height: "45vw", background: "radial-gradient(circle at 55% 55%, rgba(16,185,129,0.35), rgba(5,150,105,0.15) 50%, transparent 70%)" }} delay={-8} />
-      <Blob style={{ top: "20%", right: "-8%", width: "38vw", height: "38vw", background: "radial-gradient(circle, rgba(30,58,138,0.45), transparent 70%)" }} delay={-4} />
+      <Blob
+        style={{
+          top: "-10%", left: "-8%", width: "55vw", height: "55vw",
+          background: "radial-gradient(circle at 40% 40%, rgba(29,78,216,0.55), rgba(37,99,235,0.2) 50%, transparent 70%)"
+        }}
+        delay={0}
+      />
+      <Blob
+        style={{
+          bottom: "-5%", right: "-5%", width: "45vw", height: "45vw",
+          background: "radial-gradient(circle at 55% 55%, rgba(16,185,129,0.35), rgba(5,150,105,0.15) 50%, transparent 70%)"
+        }}
+        delay={-8}
+      />
+      <Blob
+        style={{
+          top: "20%", right: "-8%", width: "38vw", height: "38vw",
+          background: "radial-gradient(circle, rgba(30,58,138,0.45), transparent 70%)"
+        }}
+        delay={-4}
+      />
 
       {/* Grain */}
       <div
@@ -105,20 +122,19 @@ export default function LandingPage() {
       />
 
       {/* ── Main content ── */}
-      <div className="relative z-10 flex flex-col min-h-[calc(100vh-96px)]">
-
+      <div className="relative z-10 flex flex-col min-h-screen">
         {/* Hero */}
-        <div className="flex-1 flex flex-col lg:flex-row items-center max-w-7xl mx-auto w-full px-6 sm:px-10 lg:px-16 py-16 lg:py-0 gap-16 lg:gap-24">
+        <div className="flex-1 flex flex-col lg:flex-row flex-wrap items-center max-w-7xl mx-auto w-full px-6 sm:px-10 lg:px-16 py-16 lg:py-0 gap-16 lg:gap-24">
 
           {/* Left — text */}
-          <div className="flex-1 flex flex-col justify-center">
+          <div className="flex-1 flex flex-col justify-center text-center lg:text-left">
 
             {/* Live pill */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex mb-8 self-start"
+              className="inline-flex mb-8 self-center lg:self-start"
             >
               <div
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full"
@@ -137,8 +153,8 @@ export default function LandingPage() {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="text-white leading-[0.9] tracking-[-0.04em]"
-                style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: "clamp(48px, 8vw, 100px)" }}
+                className="text-white font-extrabold leading-[0.9] tracking-[-0.04em]"
+                style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(48px, 8vw, 100px)" }}
               >
                 Engage
               </motion.h1>
@@ -148,8 +164,8 @@ export default function LandingPage() {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.42, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="leading-[0.9] tracking-[-0.04em]"
-                style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: "clamp(48px, 8vw, 100px)", color: "rgba(255,255,255,0.25)" }}
+                className="font-extrabold leading-[0.9] tracking-[-0.04em]"
+                style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(48px, 8vw, 100px)", color: "rgba(255,255,255,0.25)" }}
               >
                 Audiences
               </motion.h1>
@@ -159,8 +175,8 @@ export default function LandingPage() {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 transition={{ delay: 0.54, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="text-white leading-[0.9] tracking-[-0.04em]"
-                style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: "clamp(48px, 8vw, 100px)" }}
+                className="text-white font-extrabold leading-[0.9] tracking-[-0.04em]"
+                style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(48px, 8vw, 100px)" }}
               >
                 Live.
               </motion.h1>
@@ -171,7 +187,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="text-base md:text-lg font-light max-w-md mb-10 leading-relaxed"
+              className="text-base md:text-lg font-light max-w-md mx-auto lg:mx-0 mb-10 leading-relaxed"
               style={{ color: "rgba(255,255,255,0.42)" }}
             >
               Replace static programmes with a dynamic real-time platform.
@@ -183,7 +199,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.85, duration: 0.5 }}
-              className="flex flex-wrap items-center gap-4 mb-10"
+              className="flex flex-wrap justify-center lg:justify-start items-center gap-4 mb-10"
             >
               <Link
                 href="/events"
@@ -216,7 +232,7 @@ export default function LandingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1, duration: 0.6 }}
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap justify-center lg:justify-start gap-3"
             >
               <FeatureChip icon={Zap} label="Live session detection" />
               <FeatureChip icon={MessageSquare} label="Real-time Q&A" />
@@ -224,7 +240,6 @@ export default function LandingPage() {
               <FeatureChip icon={BarChart3} label="Multi-track planning" />
             </motion.div>
           </div>
-
           {/* Right — stat card + tagline */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
@@ -263,14 +278,14 @@ export default function LandingPage() {
           className="max-w-7xl mx-auto w-full px-6 sm:px-10 lg:px-16 py-8"
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
-          <div className="flex flex-wrap gap-10">
+          <div className="flex flex-wrap justify-center lg:justify-start gap-10">
             {[
               { value: "2",  label: "Events scheduled" },
               { value: "6+", label: "Sessions planned" },
               { value: "5",  label: "Expert speakers" },
               { value: "∞",  label: "Questions possible" },
             ].map(({ value, label }) => (
-              <div key={label}>
+              <div key={label} className="text-center lg:text-left">
                 <div
                   className="text-2xl font-bold text-white mb-0.5"
                   style={{ fontFamily: "Syne, sans-serif", letterSpacing: "-0.03em" }}
