@@ -43,6 +43,7 @@ export default function SessionCard({ session, eventId, showFavorite = true }: S
     const next = isFav ? favs.filter(id => id !== session.id) : [...favs, session.id];
     localStorage.setItem("eventsync_favs", JSON.stringify(next));
     setIsFav(!isFav);
+    window.dispatchEvent(new Event("fav-change"));
   };
 
   return (

@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getEvent } from "@/lib/mockApi";
-import { formatDateShort } from "@/lib/mockApi";
-import SessionCard from "@/components/SessionCard";
+import { getEvent, formatDateShort } from "@/lib/mockApi";
+import SessionExplorer from "@/components/SessionExplorer";
 import BadgeLive from "@/components/BadgeLive";
-import MultiTrackGrid from "@/components/MultiTrackGrid";
 
 export const dynamic = "force-dynamic";
 
@@ -23,17 +21,6 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const selectedRoomId = typeof resolvedSearchParams?.room === 'string' ? resolvedSearchParams.room : null;
 
   const liveSessions = event.sessions.filter(s => s.isLive);
-  const filteredSessions = selectedRoomId 
-    ? event.sessions.filter(s => s.room.id === selectedRoomId)
-    : event.sessions;
-
-  const sessionsByDay = filteredSessions.reduce<Record<string, typeof event.sessions>>((acc, s) => {
-    const key = new Date(s.startTime).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" });
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(s);
-    return acc;
-  }, {});
-
   const rooms = Array.from(new Map(event.sessions.map(s => [s.room.id, s.room])).values());
 
   return (
@@ -47,7 +34,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
       </nav>
 
       {/* Event header */}
-      <div className="relative rounded-2xl overflow-hidden mb-8 animate-fade-up delay-1"
+      <div className="relative rounded-2xl overflow-hidden mb-12 animate-fade-up delay-1"
         style={{ background:"rgba(200,218,248,0.04)", backdropFilter:"blur(18px)", WebkitBackdropFilter:"blur(18px)", border:"1px solid rgba(200,218,248,0.07)" }}>
         <div className="absolute top-0 left-0 right-0 h-px" style={{
           background: liveSessions.length > 0
@@ -82,75 +69,13 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
         </div>
       </div>
 
-      {/* Live sessions */}
-      {liveSessions.length > 0 && (
-        <div className="mb-8 animate-fade-up delay-2">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="relative flex w-1.5 h-1.5">
-              <span className="absolute w-1.5 h-1.5 rounded-full bg-red-400 animate-ping opacity-60" />
-              <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-            </span>
-            <span className="text-[10px] uppercase tracking-widest font-medium" style={{ color:"rgba(255,110,100,0.65)", letterSpacing:"0.1em" }}>
-              En cours
-            </span>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-2.5">
-            {liveSessions.map(s => <SessionCard key={s.id} session={s} eventId={event.id} />)}
-          </div>
-        </div>
-      )}
-
-      {/* Room filters */}
-      <div className="flex items-center gap-2 flex-wrap mb-7 animate-fade-up delay-3">
-        <span className="text-[11px] mr-1" style={{ color:"rgba(140,162,205,0.30)" }}>Salle :</span>
-        <Link href={`/events/${event.id}`}
-          className="text-[11px] px-3 py-1 rounded-full transition-all duration-200"
-          style={{ 
-            background: selectedRoomId === null ? "rgba(200,218,248,0.15)" : "rgba(200,218,248,0.04)", 
-            border: selectedRoomId === null ? "1px solid rgba(200,218,248,0.25)" : "1px solid rgba(200,218,248,0.07)", 
-            color: selectedRoomId === null ? "rgba(255,255,255,0.9)" : "rgba(155,175,215,0.42)" 
-          }}>
-          Toutes
-        </Link>
-        {rooms.map(room => {
-          const isSelected = selectedRoomId === room.id;
-          return (
-            <Link key={room.id} href={`/events/${event.id}?room=${room.id}`}
-              className="text-[11px] px-3 py-1 rounded-full transition-all duration-200"
-              style={{ 
-                background: isSelected ? "rgba(200,218,248,0.15)" : "rgba(200,218,248,0.04)", 
-                border: isSelected ? "1px solid rgba(200,218,248,0.25)" : "1px solid rgba(200,218,248,0.07)", 
-                color: isSelected ? "rgba(255,255,255,0.9)" : "rgba(155,175,215,0.42)" 
-              }}>
-              {room.name}
-            </Link>
-          );
-        })}
-      </div>
-
-      {/* Sessions by day */}
-      <div className="space-y-8">
-        {Object.entries(sessionsByDay).map(([day, daySessions], di) => (
-          <div key={day} className={`animate-fade-up delay-${di + 4}`}>
-            <div className="flex items-center gap-3 mb-4">
-              <span className="text-[10px] uppercase tracking-widest font-medium" style={{ color:"rgba(140,162,205,0.38)", letterSpacing:"0.1em" }}>
-                {day}
-              </span>
-              <div className="flex-1 h-px" style={{ background:"rgba(200,218,248,0.05)" }} />
-            </div>
-            
-            {!selectedRoomId ? (
-              <MultiTrackGrid sessions={daySessions} eventId={event.id} />
-            ) : (
-              <div className="grid sm:grid-cols-2 gap-2.5">
-                {daySessions
-                  .sort((a,b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
-                  .map(s => <SessionCard key={s.id} session={s} eventId={event.id} />)}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      {/* Sessions Explorer (Filters + Grid) */}
+      <SessionExplorer 
+        sessions={event.sessions} 
+        eventId={event.id} 
+        rooms={rooms} 
+        selectedRoomId={selectedRoomId} 
+      />
     </div>
   );
 }

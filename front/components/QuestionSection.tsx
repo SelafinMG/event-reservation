@@ -60,15 +60,24 @@ export default function QuestionSection({ initialQuestions, sessionId, isLive }:
 
   return (
     <div>
-      <div className="flex items-center gap-2.5 mb-5">
-        <h2 className="text-base font-medium" style={{ color:"rgba(215,228,252,0.88)", letterSpacing:"-0.01em" }}>
-          Questions
-        </h2>
-        {questions.length > 0 && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full"
-            style={{ background:"rgba(200,218,248,0.06)", border:"1px solid rgba(200,218,248,0.09)", color:"rgba(150,170,210,0.5)" }}>
-            {questions.length}
-          </span>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-base font-medium" style={{ color:"rgba(215,228,252,0.88)", letterSpacing:"-0.01em" }}>
+            Questions
+          </h2>
+          {questions.length > 0 && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full"
+              style={{ background:"rgba(200,218,248,0.06)", border:"1px solid rgba(200,218,248,0.09)", color:"rgba(150,170,210,0.5)" }}>
+              {questions.length}
+            </span>
+          )}
+        </div>
+        {isLive && (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full animate-pulse"
+            style={{ background:"rgba(220,55,45,0.1)", border:"1px solid rgba(220,55,45,0.2)" }}>
+            <span className="w-1 h-1 rounded-full bg-red-500 shadow-[0_0_4px_rgba(239,68,68,0.8)]" />
+            <span className="text-[9px] uppercase tracking-wider font-semibold text-red-400">Direct</span>
+          </div>
         )}
       </div>
 
@@ -143,10 +152,13 @@ export default function QuestionSection({ initialQuestions, sessionId, isLive }:
                   {q.content}
                 </p>
                 <div className="flex items-center gap-2 text-[10px]" style={{ color:"rgba(130,155,200,0.35)" }}>
-                  {i === 0 && questions.length > 1 && (
-                    <span className="px-1.5 py-0.5 rounded"
-                      style={{ background:"rgba(200,170,60,0.1)", border:"1px solid rgba(200,170,60,0.2)", color:"rgba(220,190,70,0.6)" }}>
-                      top
+                  {i === 0 && questions.length > 1 && q.upvotes > 0 && (
+                    <span className="px-1.5 py-0.5 rounded flex items-center gap-1"
+                      style={{ background:"rgba(250,210,80,0.08)", border:"1px solid rgba(250,210,80,0.15)", color:"rgba(250,210,80,0.7)" }}>
+                      <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                      POPULAIRE
                     </span>
                   )}
                   <span>{q.authorName || "anonyme"}</span>
