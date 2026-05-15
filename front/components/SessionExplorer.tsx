@@ -17,6 +17,9 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showRefreshToast, setShowRefreshToast] = useState(false);
+
   // Load favorites from localStorage
   useEffect(() => {
     const loadFavs = () => {
@@ -30,6 +33,15 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
     window.addEventListener("fav-change", handleFavChange);
     return () => window.removeEventListener("fav-change", handleFavChange);
   }, []);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    // Simulate API delay
+    await new Promise(r => setTimeout(r, 1000));
+    setIsRefreshing(false);
+    setShowRefreshToast(true);
+    setTimeout(() => setShowRefreshToast(false), 3000);
+  };
 
   // Filter sessions
   const filteredSessions = sessions.filter(s => {
@@ -47,7 +59,22 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
   }, {});
 
   return (
-    <div className="space-y-8">
+    <div className="relative space-y-8">
+      {/* Toast Notification */}
+      {showRefreshToast && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-xl border animate-fade-up"
+          style={{ 
+            background: "rgba(200,218,248,0.08)", 
+            backdropFilter: "blur(12px)", 
+            borderColor: "rgba(200,218,248,0.15)",
+            color: "rgba(220,232,252,0.95)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
+          }}>
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+          <span className="text-[12px] font-medium tracking-tight">Données rafraîchies</span>
+        </div>
+      )}
+
       {/* Filters Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 animate-fade-up delay-3">
         {/* Room filters */}
@@ -78,32 +105,54 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
           })}
         </div>
 
-        {/* Favorite toggle */}
-        <button
-          onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-          className="flex items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300 self-start sm:self-center"
-          style={{
-            background: showFavoritesOnly ? "rgba(250,210,80,0.12)" : "rgba(200,218,248,0.03)",
-            border: showFavoritesOnly ? "1px solid rgba(250,210,80,0.3)" : "1px solid rgba(200,218,248,0.08)",
-            color: showFavoritesOnly ? "rgba(250,210,80,0.9)" : "rgba(150,170,210,0.45)",
-          }}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24"
-            fill={showFavoritesOnly ? "currentColor" : "none"}
-            stroke="currentColor" strokeWidth="2">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
-          <span className="text-[11px] font-medium uppercase tracking-wider">Mes Favoris</span>
-          {favorites.length > 0 && !showFavoritesOnly && (
-            <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10">
-              {favorites.length}
-            </span>
-          )}
-        </button>
+        {/* Controls */}
+        <div className="flex items-center gap-3 self-start sm:self-center">
+          {/* Refresh button */}
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="p-2 rounded-full transition-all duration-300"
+            style={{
+              background: "rgba(200,218,248,0.03)",
+              border: "1px solid rgba(200,218,248,0.08)",
+              color: "rgba(150,170,210,0.45)",
+            }}
+            title="Rafraîchir les données"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              className={isRefreshing ? "animate-spin" : ""}>
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+            </svg>
+          </button>
+
+          {/* Favorite toggle */}
+          <button
+            onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+            className="flex items-center gap-2 px-4 py-1.5 rounded-full transition-all duration-300"
+            style={{
+              background: showFavoritesOnly ? "rgba(250,210,80,0.12)" : "rgba(200,218,248,0.03)",
+              border: showFavoritesOnly ? "1px solid rgba(250,210,80,0.3)" : "1px solid rgba(200,218,248,0.08)",
+              color: showFavoritesOnly ? "rgba(250,210,80,0.9)" : "rgba(150,170,210,0.45)",
+            }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24"
+              fill={showFavoritesOnly ? "currentColor" : "none"}
+              stroke="currentColor" strokeWidth="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <span className="text-[11px] font-medium uppercase tracking-wider">Mes Favoris</span>
+            {favorites.length > 0 && !showFavoritesOnly && (
+              <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10">
+                {favorites.length}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Sessions Content */}
-      <div className="space-y-12">
+      <div className={`transition-opacity duration-500 ${isRefreshing ? "opacity-30 pointer-events-none" : "opacity-100"}`}>
+        <div className="space-y-12">
         {Object.entries(sessionsByDay).length === 0 ? (
           <div className="py-20 text-center animate-fade-up">
             <p className="text-[13px] font-light" style={{ color: "rgba(140,162,205,0.35)" }}>

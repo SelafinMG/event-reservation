@@ -38,9 +38,20 @@ export default function QuestionSection({ initialQuestions, sessionId, isLive }:
     setContent(""); setAuthorName(""); setSubmitting(false);
   };
 
+  // Load upvoted from localStorage
+  useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = JSON.parse(localStorage.getItem("eventsync_upvoted") || "[]");
+      setUpvoted(new Set(stored));
+    }
+  });
+
   const handleUpvote = (qid: string) => {
     if (upvoted.has(qid)) return;
-    setUpvoted(prev => new Set([...prev, qid]));
+    const nextUpvoted = new Set([...Array.from(upvoted), qid]);
+    setUpvoted(nextUpvoted);
+    localStorage.setItem("eventsync_upvoted", JSON.stringify(Array.from(nextUpvoted)));
+    
     setQuestions(prev =>
       [...prev.map(q => q.id === qid ? {...q, upvotes: q.upvotes + 1} : q)]
         .sort((a,b) => b.upvotes - a.upvotes)
