@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { ArrowUpRight, Zap, Users, MessageSquare, BarChart3 } from "lucide-react"
 
-// ── Floating stat card (left panel, like Soni's "30 days" card) ──────────
 function StatCard() {
   return (
     <motion.div
@@ -57,7 +56,6 @@ function StatCard() {
   )
 }
 
-// ── Mini feature chip ─────────────────────────────────────────────────────
 function FeatureChip({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
   return (
     <div
@@ -74,7 +72,6 @@ function FeatureChip({ icon: Icon, label }: { icon: React.ElementType; label: st
   )
 }
 
-// ── Animated blob ─────────────────────────────────────────────────────────
 function Blob({ style, delay = 0 }: { style: React.CSSProperties; delay?: number }) {
   return (
     <motion.div
@@ -95,7 +92,6 @@ function Blob({ style, delay = 0 }: { style: React.CSSProperties; delay?: number
   )
 }
 
-// ── Main landing page ─────────────────────────────────────────────────────
 export default function LandingPage() {
   return (
     <div
