@@ -1,20 +1,51 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import type { Question } from "@/lib/mockApi";
+import { useState, useTransition } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChevronUp, MessageSquare, Send, User } from "lucide-react"
+import type { Question } from "@/lib/types"
+import { addQuestion, upvoteQuestion } from "@/lib/mockApi"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 interface QuestionSectionProps {
-  initialQuestions: Question[];
-  sessionId: string;
-  isLive: boolean;
+  sessionId: string
+  initialQuestions: Question[]
+  isLive?: boolean
 }
 
-function timeAgo(iso: string) {
-  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (diff < 60) return "à l'instant";
-  if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
-  return `il y a ${Math.floor(diff/3600)} h`;
-}
+export function QuestionSection({
+  sessionId,
+  initialQuestions,
+  isLive = false,
+}: QuestionSectionProps) {
+  const [questions, setQuestions] = useState<Question[]>(initialQuestions)
+  const [newQuestion, setNewQuestion] = useState("")
+  const [authorName, setAuthorName] = useState("")
+  const [isPending, startTransition] = useTransition()
+  const [votedQuestions, setVotedQuestions] = useState<Set<string>>(new Set())
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newQuestion.trim()) return
+
+    startTransition(async () => {
+      const result = await addQuestion(sessionId, {
+        content: newQuestion.trim(),
+        authorName: authorName.trim() || null,
+      })
+
+      if ("error" in result) {
+        console.error(result.error)
+        return
+      }
+
+      setQuestions((prev) =>
+        [...prev, result].sort((a, b) => b.upvotes - a.upvotes)
+      )
+      setNewQuestion("")
+    })
+  }
 
 export default function QuestionSection({ initialQuestions, sessionId, isLive }: QuestionSectionProps) {
   const [questions, setQuestions] = useState(initialQuestions);
@@ -92,50 +123,41 @@ export default function QuestionSection({ initialQuestions, sessionId, isLive }:
         )}
       </div>
 
-      {isLive ? (
-        <div className="mb-5 p-4 rounded-xl" style={{ background:"rgba(200,218,248,0.04)", border:"1px solid rgba(200,218,248,0.07)" }}>
-          <p className="text-[11px] mb-3 font-light" style={{ color:"rgba(140,162,205,0.40)" }}>
-            Posez votre question en direct
-          </p>
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            placeholder="Votre question…"
-            rows={3}
-            maxLength={500}
-            className="w-full px-3 py-2.5 mb-2.5 resize-none transition-colors duration-200"
-            style={{ ...inputStyle, minHeight:"72px" }}
-          />
-          <div className="flex items-center gap-2">
-            <input
+      {/* Question Form */}
+      <motion.form
+        onSubmit={handleSubmit}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-4 space-y-3"
+      >
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <User className="w-4 h-4" />
+            <Input
               type="text"
+              placeholder="Your name (optional)"
               value={authorName}
-              onChange={e => setAuthorName(e.target.value)}
-              placeholder="Votre nom (optionnel)"
-              className="flex-1 px-3 py-2 transition-colors duration-200"
-              style={inputStyle}
+              onChange={(e) => setAuthorName(e.target.value)}
+              className="h-8 w-40 bg-background/50 border-border/50"
             />
-            <button
-              onClick={handleSubmit}
-              disabled={!content.trim() || submitting}
-              className="px-4 py-2 rounded-lg text-[12px] font-medium transition-all duration-200"
-              style={{
-                background: content.trim() ? "rgba(200,218,248,0.1)" : "rgba(200,218,248,0.04)",
-                border: "1px solid rgba(200,218,248,0.12)",
-                color: content.trim() ? "rgba(215,228,252,0.85)" : "rgba(140,162,205,0.30)",
-                letterSpacing:"0.02em",
-              }}
-            >
-              {submitting ? "…" : "Envoyer"}
-            </button>
           </div>
         </div>
-      ) : (
-        <div className="mb-5 px-4 py-3 rounded-xl text-center"
-          style={{ background:"rgba(200,218,248,0.025)", border:"1px solid rgba(200,218,248,0.05)" }}>
-          <p className="text-[12px] font-light" style={{ color:"rgba(140,162,205,0.32)" }}>
-            Les questions sont disponibles uniquement pendant la session
-          </p>
+        <div className="flex gap-2">
+          <Input
+            type="text"
+            placeholder="Ask a question..."
+            value={newQuestion}
+            onChange={(e) => setNewQuestion(e.target.value)}
+            className="flex-1 bg-background/50 border-border/50"
+            disabled={isPending}
+          />
+          <Button
+            type="submit"
+            disabled={isPending || !newQuestion.trim()}
+            className="bg-primary hover:bg-primary/90"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
         </div>
       )}
 
@@ -171,16 +193,39 @@ export default function QuestionSection({ initialQuestions, sessionId, isLive }:
                       </svg>
                       POPULAIRE
                     </span>
-                  )}
-                  <span>{q.authorName || "anonyme"}</span>
-                  <span>·</span>
-                  <span>{timeAgo(q.createdAt)}</span>
+                  </div>
                 </div>
+
+                {/* Rank badge for top 3 */}
+                {index < 3 && (
+                  <div
+                    className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                      index === 0
+                        ? "bg-yellow-500/20 text-yellow-400"
+                        : index === 1
+                        ? "bg-gray-400/20 text-gray-300"
+                        : "bg-orange-500/20 text-orange-400"
+                    }`}
+                  >
+                    #{index + 1}
+                  </div>
+                )}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      )}
+        </AnimatePresence>
+
+        {questions.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12 text-muted-foreground"
+          >
+            <MessageSquare className="w-12 h-12 mx-auto mb-3 opacity-50" />
+            <p>No questions yet. Be the first to ask!</p>
+          </motion.div>
+        )}
+      </div>
     </div>
-  );
+  )
 }

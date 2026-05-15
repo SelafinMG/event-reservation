@@ -1,10 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getEvent, formatDateShort } from "@/lib/mockApi";
+import { EventDetailClient } from "./EventsDetailClient"
+import { getEventById } from "@/lib/mockApi"
 import SessionExplorer from "@/components/SessionExplorer";
 import BadgeLive from "@/components/BadgeLive";
 
-export const dynamic = "force-dynamic";
+interface EventDetailPageProps {
+  params: Promise<{ eventId: string }>
+}
 
 interface Props {
   params: Promise<{ eventId: string }>;

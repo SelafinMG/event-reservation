@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import LandingPage from "@/app/landing/LandingPage"
 
-export default function HomePage() {
-  redirect("/events");
+export default function Home() {
+  return <LandingPage />
 }

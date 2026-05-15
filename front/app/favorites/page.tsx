@@ -1,55 +1,105 @@
-"use client";
-import { useEffect, useState } from "react";
-import SessionCard from "@/components/SessionCard";
-import { getEvents } from "@/lib/mockApi";
-import type { SessionSummary } from "@/lib/mockApi";
+"use client"
+
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Star, Calendar } from "lucide-react"
+import type { Session } from "@/lib/types"
+import { getFavoriteSessions } from "@/lib/mockApi"
+import { SessionCard } from "@/components/SessionCard"
 
 export default function FavoritesPage() {
-  const [favs, setFavs] = useState<{ session:SessionSummary; eventId:string }[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  const [sessions, setSessions] = useState<Session[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const ids: string[] = JSON.parse(localStorage.getItem("eventsync_favs") || "[]");
-    const res: { session:SessionSummary; eventId:string }[] = [];
-    for (const evt of getEvents())
-      for (const s of evt.sessions)
-        if (ids.includes(s.id)) res.push({ session:s, eventId:evt.id });
-    setFavs(res); setLoaded(true);
-  }, []);
+    const loadFavorites = async () => {
+      const favSessions = await getFavoriteSessions()
+      setSessions(favSessions)
+      setLoading(false)
+    }
+    loadFavorites()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-center py-20">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
+          />
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="max-w-3xl mx-auto px-5 sm:px-6 py-14">
-      <div className="mb-10 animate-fade-up flex items-baseline gap-3">
-        <h1 className="text-3xl font-medium tracking-tight" style={{ color:"rgba(225,235,252,0.92)", letterSpacing:"-0.03em" }}>Favoris</h1>
-        {loaded && favs.length > 0 && (
-          <span className="text-[12px] font-light" style={{ color:"rgba(200,175,60,0.55)" }}>
-            {favs.length} session{favs.length>1?"s":""}
-          </span>
-        )}
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-12"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-3 rounded-2xl bg-yellow-500/20">
+            <Star className="w-6 h-6 text-yellow-400" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground">
+            Favorites
+          </h1>
+        </div>
+        <p className="text-lg text-muted-foreground max-w-2xl">
+          Your saved sessions. Quick access to the talks you don&apos;t want to miss.
+        </p>
+      </motion.div>
 
-      {!loaded ? (
-        <div className="space-y-3">
-          {[1,2,3].map(i => <div key={i} className="h-20 rounded-xl shimmer" style={{ background:"rgba(200,218,248,0.04)" }} />)}
-        </div>
-      ) : favs.length === 0 ? (
-        <div className="text-center py-24">
-          <svg className="w-10 h-10 mx-auto mb-4 opacity-20" fill="none" stroke="rgba(200,218,248,0.5)" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-          </svg>
-          <p className="text-sm font-light" style={{ color:"rgba(140,162,205,0.30)" }}>
-            Aucune session ajoutée — cliquez sur l'étoile dans les cartes
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-2.5">
-          {favs.map(({ session, eventId }, i) => (
-            <div key={session.id} className={`animate-fade-up delay-${i+1}`}>
-              <SessionCard session={session} eventId={eventId} />
-            </div>
+      {/* Sessions list */}
+      {sessions.length > 0 ? (
+        <div className="space-y-4">
+          {sessions.map((session, index) => (
+            <SessionCard
+              key={session.id}
+              session={{
+                id: session.id,
+                title: session.title,
+                startTime: session.startTime,
+                endTime: session.endTime,
+                room: session.room,
+                isLive: session.isLive,
+                speakers: session.speakers,
+              }}
+              eventId={session.eventId}
+              index={index}
+            />
           ))}
         </div>
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-20"
+        >
+          <Star className="w-16 h-16 mx-auto mb-4 text-muted-foreground/50" />
+          <h2 className="text-xl font-semibold text-muted-foreground mb-2">
+            No favorites yet
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            Start exploring sessions and save your favorites by clicking the star icon.
+          </p>
+          <motion.a
+            href="/events"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-colors"
+          >
+            <Calendar className="w-4 h-4" />
+            Browse Events
+          </motion.a>
+        </motion.div>
       )}
     </div>
-  );
+  )
 }
