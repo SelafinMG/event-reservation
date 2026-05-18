@@ -1,21 +1,22 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, Globe, Calendar } from "lucide-react"
-import { Github, Linkedin, Twitter } from "lucide-react"
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa"
 import Link from "next/link"
 import Image from "next/image"
 import type { Speaker } from "@/lib/types"
 import { BadgeLive } from "@/components/BadgeLive"
 
 interface SpeakerDetailClientProps {
-  speaker: Speaker
+  speakerId: string
 }
 
 const socialIcons = {
-  twitter: Twitter,
-  linkedin: Linkedin,
-  github: Github,
+  twitter: FaTwitter,
+  linkedin: FaLinkedin,
+  github: FaGithub,
   website: Globe,
   other: Globe,
 }
@@ -28,7 +29,31 @@ const socialLabels = {
   other: "Link",
 }
 
-export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
+export function SpeakerDetailClient({ speakerId }: SpeakerDetailClientProps) {
+  const [speaker, setSpeaker] = useState<Speaker | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadSpeaker() {
+      try {
+        const res = await fetch(`http://localhost:3001/api/speakers/${speakerId}`)
+        if (!res.ok) throw new Error("Failed to fetch speaker")
+        const data = await res.json()
+        setSpeaker(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadSpeaker()
+  }, [speakerId])
+
+  if (loading) return <p className="text-center py-10">Chargement du profil...</p>
+  if (error) return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
+  if (!speaker) return <p className="text-center py-10">Intervenant introuvable</p>
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Back */}
@@ -100,13 +125,9 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
         </div>
       </motion.div>
 
-      {/* Sessions — FIX: eventId is now dynamic from session.eventId */}
+      {/* Sessions */}
       {speaker.sessions && speaker.sessions.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary" />
             Sessions ({speaker.sessions.length})
@@ -115,9 +136,6 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
             {speaker.sessions.map((session, index) => {
               const startTime = new Date(session.startTime)
               const endTime = new Date(session.endTime)
-
-              // ✅ FIX: Use session.eventId if available, fallback gracefully
-              // You'll need to add eventId to SessionSummary type or enrich the API
               const sessionEventId = (session as any).eventId ?? "evt-001"
 
               return (
@@ -154,4 +172,4 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
       )}
     </div>
   )
-} 
+}

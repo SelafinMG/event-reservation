@@ -1,22 +1,21 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronUp, MessageSquare, Send, User } from "lucide-react"
 import type { Question } from "@/lib/types"
-import { addQuestion, upvoteQuestion } from "@/lib/mockApi"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 interface QuestionSectionProps {
   sessionId: string
-  initialQuestions: Question[]
+  initialQuestions?: Question[]
   isLive?: boolean
 }
 
 export function QuestionSection({
   sessionId,
-  initialQuestions,
+  initialQuestions = [],
   isLive = false,
 }: QuestionSectionProps) {
   const [questions, setQuestions] = useState<Question[]>(initialQuestions)
@@ -25,41 +24,67 @@ export function QuestionSection({
   const [isPending, startTransition] = useTransition()
   const [votedQuestions, setVotedQuestions] = useState<Set<string>>(new Set())
 
+  // Charger les questions depuis l’API
+  useEffect(() => {
+    async function loadQuestions() {
+      try {
+        const res = await fetch(`http://localhost:3001/api/sessions/${sessionId}/questions`)
+        if (!res.ok) throw new Error("Failed to fetch questions")
+        const data = await res.json()
+        setQuestions(data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+    loadQuestions()
+  }, [sessionId])
+
+  // Ajouter une question
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newQuestion.trim()) return
 
     startTransition(async () => {
-      const result = await addQuestion(sessionId, {
-        content: newQuestion.trim(),
-        authorName: authorName.trim() || null,
-      })
-
-      if ("error" in result) {
-        console.error(result.error)
-        return
+      try {
+        const res = await fetch(`http://localhost:3001/api/sessions/${sessionId}/questions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: newQuestion.trim(),
+            authorName: authorName.trim() || null,
+          }),
+        })
+        if (!res.ok) throw new Error("Failed to add question")
+        const result = await res.json()
+        setQuestions((prev) => [...prev, result].sort((a, b) => b.upvotes - a.upvotes))
+        setNewQuestion("")
+      } catch (err) {
+        console.error(err)
       }
-
-      setQuestions((prev) =>
-        [...prev, result].sort((a, b) => b.upvotes - a.upvotes)
-      )
-      setNewQuestion("")
     })
   }
 
+  // Upvote
   const handleUpvote = async (questionId: string) => {
     if (votedQuestions.has(questionId)) return
 
     startTransition(async () => {
-      const result = await upvoteQuestion(sessionId, questionId)
-      if ("error" in result) return
-
-      setVotedQuestions((prev) => new Set(prev).add(questionId))
-      setQuestions((prev) =>
-        prev
-          .map((q) => (q.id === questionId ? { ...q, upvotes: q.upvotes + 1 } : q))
-          .sort((a, b) => b.upvotes - a.upvotes)
-      )
+      try {
+        const res = await fetch(
+          `http://localhost:3001/api/sessions/${sessionId}/questions/${questionId}/upvote`,
+          { method: "POST" }
+        )
+        if (!res.ok) throw new Error("Failed to upvote question")
+        const updated = await res.json()
+        setVotedQuestions((prev) => new Set(prev).add(questionId))
+        setQuestions((prev) =>
+          prev
+            .map((q) => (q.id === updated.id ? updated : q))
+            .sort((a, b) => b.upvotes - a.upvotes)
+        )
+      } catch (err) {
+        console.error(err)
+      }
     })
   }
 
@@ -77,42 +102,44 @@ export function QuestionSection({
       </div>
 
       {/* Question Form */}
-      <motion.form
-        onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-4 space-y-3"
-      >
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <User className="w-4 h-4" />
+      {isLive && (
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-4 space-y-3"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <User className="w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Your name (optional)"
+                value={authorName}
+                onChange={(e) => setAuthorName(e.target.value)}
+                className="h-8 w-40 bg-background/50 border-border/50"
+              />
+            </div>
+          </div>
+          <div className="flex gap-2">
             <Input
               type="text"
-              placeholder="Your name (optional)"
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              className="h-8 w-40 bg-background/50 border-border/50"
+              placeholder="Ask a question..."
+              value={newQuestion}
+              onChange={(e) => setNewQuestion(e.target.value)}
+              className="flex-1 bg-background/50 border-border/50"
+              disabled={isPending}
             />
+            <Button
+              type="submit"
+              disabled={isPending || !newQuestion.trim()}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
           </div>
-        </div>
-        <div className="flex gap-2">
-          <Input
-            type="text"
-            placeholder="Ask a question..."
-            value={newQuestion}
-            onChange={(e) => setNewQuestion(e.target.value)}
-            className="flex-1 bg-background/50 border-border/50"
-            disabled={isPending}
-          />
-          <Button
-            type="submit"
-            disabled={isPending || !newQuestion.trim()}
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
-        </div>
-      </motion.form>
+        </motion.form>
+      )}
 
       {/* Questions List */}
       <div className="space-y-3">
@@ -152,9 +179,7 @@ export function QuestionSection({
 
                 {/* Question content */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-foreground leading-relaxed">
-                    {question.content}
-                  </p>
+                  <p className="text-foreground leading-relaxed">{question.content}</p>
                   <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
                     <span>{question.authorName || "Anonymous"}</span>
                     <span>•</span>

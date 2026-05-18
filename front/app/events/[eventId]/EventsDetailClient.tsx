@@ -1,25 +1,61 @@
 "use client"
 
+import { useEffect, useState, useMemo } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, Calendar, MapPin, Clock } from "lucide-react"
 import Link from "next/link"
-import type { Event } from "@/lib/types"
 import { SessionCard } from "@/components/SessionCard"
-import { useState, useMemo } from "react"
 import { cn } from "@/lib/utils"
+import type { Event } from "@/lib/types"
 
 interface EventDetailClientProps {
-  event: Event
+  eventId: string
 }
 
-export function EventDetailClient({ event }: EventDetailClientProps) {
+export function EventDetailClient({ eventId }: EventDetailClientProps) {
+  const [event, setEvent] = useState<Event | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadEvent() {
+      try {
+        const res = await fetch(`http://localhost:3001/api/events/${eventId}`)
+        if (!res.ok) throw new Error("Failed to fetch event")
+        const data = await res.json()
+        setEvent(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadEvent()
+  }, [eventId])
+
+  if (loading) {
+    return <p className="text-center py-10">Chargement de l’événement...</p>
+  }
+
+  if (error) {
+    return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
+  }
+
+  if (!event) {
+    return (
+      <div className="text-center py-20">
+        <Calendar className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
+        <p className="text-muted-foreground">Événement introuvable</p>
+      </div>
+    )
+  }
+
   const startDate = new Date(event.startDate)
   const endDate = new Date(event.endDate)
 
   // Group sessions by day
   const sessionsByDay = useMemo(() => {
     if (!event.sessions) return {}
-    
     const grouped: Record<string, typeof event.sessions> = {}
     event.sessions.forEach((session) => {
       const day = new Date(session.startTime).toLocaleDateString("fr-FR", {
@@ -30,28 +66,24 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
       if (!grouped[day]) grouped[day] = []
       grouped[day].push(session)
     })
-
-    // Sort sessions within each day
     Object.keys(grouped).forEach((day) => {
       grouped[day].sort(
         (a, b) =>
           new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
       )
     })
-
     return grouped
   }, [event.sessions])
 
   const days = Object.keys(sessionsByDay)
   const [selectedDay, setSelectedDay] = useState(days[0] || "")
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("fr-FR", {
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString("fr-FR", {
       day: "numeric",
       month: "long",
       year: "numeric",
     })
-  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,7 +117,6 @@ export function EventDetailClient({ event }: EventDetailClientProps) {
             {event.description}
           </p>
         )}
-
         <div className="flex flex-wrap gap-6 text-muted-foreground">
           <div className="flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary" />

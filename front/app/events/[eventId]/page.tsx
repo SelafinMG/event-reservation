@@ -14,5 +14,5 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
     notFound()
   }
 
-  return <EventDetailClient event={event} />
+  return <EventDetailClient eventId={eventId} />
 }

@@ -1,15 +1,40 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Calendar, Sparkles } from "lucide-react"
-import type { Event } from "@/lib/types"
 import { EventCardItem } from "@/components/EventCard"
+import type { Event } from "@/lib/types"
 
-interface EventsClientProps {
-  events: Event[]
-}
+export function EventsClient() {
+  const [events, setEvents] = useState<Event[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-export function EventsClient({ events }: EventsClientProps) {
+  useEffect(() => {
+    async function loadEvents() {
+      try {
+        const res = await fetch("http://localhost:3001/api/events")
+        if (!res.ok) throw new Error("Failed to fetch events")
+        const data = await res.json()
+        setEvents(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadEvents()
+  }, [])
+
+  if (loading) {
+    return <p className="text-center py-10">Chargement des événements...</p>
+  }
+
+  if (error) {
+    return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}
@@ -34,7 +59,7 @@ export function EventsClient({ events }: EventsClientProps) {
       </motion.div>
 
       {/* Live events highlight */}
-      {events.some((e) => e.sessions?.some((s) => s.isLive)) && (
+      {events.some((e) => e.sessions?.some((s: any) => s.isLive)) && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
