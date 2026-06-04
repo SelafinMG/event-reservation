@@ -14,7 +14,7 @@ export default function FavoritesPage() {
   useEffect(() => {
     async function loadFavorites() {
       try {
-        const res = await fetch("http://localhost:3001/api/favorites/sessions")
+        const res = await fetch("http://localhost:3001/v1/favorites/sessions")
         if (!res.ok) throw new Error("Failed to fetch favorites")
         const favSessions = await res.json()
         setSessions(favSessions)

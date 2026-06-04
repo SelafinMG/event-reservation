@@ -37,7 +37,7 @@ export function SpeakerDetailClient({ speakerId }: SpeakerDetailClientProps) {
   useEffect(() => {
     async function loadSpeaker() {
       try {
-        const res = await fetch(`http://localhost:3001/api/speakers/${speakerId}`)
+        const res = await fetch(`http://localhost:3001/v1/speakers/${speakerId}`)
         if (!res.ok) throw new Error("Failed to fetch speaker")
         const data = await res.json()
         setSpeaker(data)
@@ -80,10 +80,16 @@ export function SpeakerDetailClient({ speakerId }: SpeakerDetailClientProps) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-primary/30 flex-shrink-0"
+            className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-primary/30 shrink-0"
           >
             {speaker.photoUrl ? (
-              <Image src={speaker.photoUrl} alt={speaker.fullName} fill className="object-cover" />
+              <Image
+                src={speaker.photoUrl}
+                alt={speaker.fullName}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 160px"
+                className="object-cover"
+              />
             ) : (
               <div className="w-full h-full bg-primary/20 flex items-center justify-center text-4xl font-bold text-primary">
                 {speaker.fullName.charAt(0)}

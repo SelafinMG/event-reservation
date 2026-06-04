@@ -4,5 +4,5 @@ import { SpeakersClient } from "./SpeakersClient"
 export default async function SpeakersPage() {
   const speakers = await getSpeakers()
 
-  return <SpeakersClient speakers={speakers} />
+  return <SpeakersClient {...({ speakers } as any)} />
 }

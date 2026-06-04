@@ -14,10 +14,21 @@ export function SpeakersClient() {
   useEffect(() => {
     async function loadSpeakers() {
       try {
-        const res = await fetch("http://localhost:3001/api/speakers")
+        const res = await fetch("http://localhost:3001/v1/speakers")
         if (!res.ok) throw new Error("Failed to fetch speakers")
         const data = await res.json()
-        setSpeakers(data)
+
+        const normalized: Speaker[] = data.map((s: any) => ({
+          id: s.id ?? s.speakerId,
+          fullName: s.fullName,
+          photoUrl: s.photoUrl,
+          bio: s.bio,
+          links: s.links ?? [],
+          sessions: s.sessions ?? []
+        }))
+
+        console.log("Speakers loaded:", normalized)
+        setSpeakers(normalized)
       } catch (err: any) {
         setError(err.message)
       } finally {

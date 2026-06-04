@@ -14,7 +14,7 @@ export function EventsClient() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        const res = await fetch("http://localhost:3001/api/events")
+        const res = await fetch("http://localhost:3001/v1/events")
         if (!res.ok) throw new Error("Failed to fetch events")
         const data = await res.json()
         setEvents(data)

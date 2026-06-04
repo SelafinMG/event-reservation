@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation"
-import { getSpeakerById } from "@/lib/mockApi"
 import { SpeakerDetailClient } from "./SpeakerDetailClient"
 
 interface SpeakerDetailPageProps {
@@ -8,11 +7,13 @@ interface SpeakerDetailPageProps {
 
 export default async function SpeakerDetailPage({ params }: SpeakerDetailPageProps) {
   const { speakerId } = await params
-  const speaker = await getSpeakerById(speakerId)
 
-  if (!speaker) {
+  const res = await fetch(`http://localhost:3001/v1/speakers/${speakerId}`, { cache: "no-store" })
+  if (!res.ok) {
     notFound()
   }
 
-  return <SpeakerDetailClient speaker={speaker} />
+  const speaker = await res.json()
+
+  return <SpeakerDetailClient speakerId={speakerId} />
 }
