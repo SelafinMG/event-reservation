@@ -7,7 +7,7 @@ import { SessionList, SessionEdit, SessionCreate } from "./sessions";
 import { SpeakerList, SpeakerEdit, SpeakerCreate } from "./speakers";
 import { QuestionList, QuestionEdit, QuestionCreate } from "./questions";
 
-const dataProvider = simpleRestProvider("http://localhost:3001");
+const dataProvider = simpleRestProvider("http://localhost:3001/v1");
 
 export const AppAdmin = () => (
   <Admin dataProvider={dataProvider} authProvider={authProvider}>
