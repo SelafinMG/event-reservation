@@ -58,8 +58,8 @@ export default function NavBar() {
           })}
         </nav>
 
-        {/* CTA */}
-        <Link
+        {/* CTA - full page load to boot the react-admin SPA at /admin */}
+        <a
           href="/admin"
           className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white bg-linear-to-r from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/40 hover:scale-105 transition-transform"
         >
@@ -68,7 +68,7 @@ export default function NavBar() {
               10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
           </svg>
           Admin
-        </Link>
+        </a>
 
         {/* Mobile Menu Button */}
         <button
@@ -95,12 +95,12 @@ export default function NavBar() {
               </Link>
             );
           })}
-          <Link
+          <a
             href="/admin"
             className="block px-4 py-2 rounded-lg text-sm font-medium text-white bg-linear-to-r from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/40"
           >
             Admin
-          </Link>
+          </a>
         </div>
       )}
     </header>
