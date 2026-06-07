@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Calendar, Sparkles } from "lucide-react"
 import { EventCardItem } from "@/components/EventCard"
 import type { Event } from "@/lib/types"
+import { getEvents } from "@/data/events"
 
 export function EventsClient() {
   const [events, setEvents] = useState<Event[]>([])
@@ -14,9 +15,7 @@ export function EventsClient() {
   useEffect(() => {
     async function loadEvents() {
       try {
-        const res = await fetch("http://localhost:3001/v1/events")
-        if (!res.ok) throw new Error("Failed to fetch events")
-        const data = await res.json()
+        const data = await getEvents()
         setEvents(data)
       } catch (err: any) {
         setError(err.message)

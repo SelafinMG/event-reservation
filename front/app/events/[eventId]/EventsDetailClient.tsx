@@ -7,6 +7,7 @@ import Link from "next/link"
 import { SessionCard } from "@/components/SessionCard"
 import { cn } from "@/lib/utils"
 import type { Event } from "@/lib/types"
+import { getEvent } from "@/data/events"
 
 interface EventDetailClientProps {
   eventId: string
@@ -21,9 +22,7 @@ export function EventDetailClient({ eventId }: EventDetailClientProps) {
   useEffect(() => {
     async function loadEvent() {
       try {
-        const res = await fetch(`http://localhost:3001/v1/events/${eventId}`)
-        if (!res.ok) throw new Error("Failed to fetch event")
-        const data = await res.json()
+        const data = await getEvent(eventId)
         setEvent(data)
       } catch (err: any) {
         setError(err.message)

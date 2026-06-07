@@ -1,29 +1,30 @@
-import { fetchUtils } from "react-admin";
+import api from "@/lib/api";
 
-const apiUrl = "http://localhost:3001";
 const httpClient = async (url, options = {}) => {
-  const token = localStorage.getItem("token");
-  options.headers = {
-    ...options.headers,
-    Authorization: `Bearer ${token}`,
-  };
-  return fetchUtils.fetchJson(url, options);
+  const response = await api.request({
+    url,
+    method: options.method ?? "GET",
+    data: options.body ? JSON.parse(options.body) : undefined,
+    headers: options.headers,
+  });
+
+  return { json: response.data };
 };
 
 const dataProvider = {
   getList: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}`).then(({ json }) => ({
+    httpClient(`/${resource}`).then(({ json }) => ({
       data: json,
       total: json.length,
     })),
 
   getOne: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}/${params.id}`).then(({ json }) => ({
+    httpClient(`/${resource}/${params.id}`).then(({ json }) => ({
       data: json,
     })),
 
   create: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}`, {
+    httpClient(`/${resource}`, {
       method: "POST",
       body: JSON.stringify(params.data),
     }).then(({ json }) => ({
@@ -31,7 +32,7 @@ const dataProvider = {
     })),
 
   update: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}/${params.id}`, {
+    httpClient(`/${resource}/${params.id}`, {
       method: "PUT",
       body: JSON.stringify(params.data),
     }).then(({ json }) => ({
@@ -39,7 +40,7 @@ const dataProvider = {
     })),
 
   delete: (resource, params) =>
-    httpClient(`${apiUrl}/${resource}/${params.id}`, {
+    httpClient(`/${resource}/${params.id}`, {
       method: "DELETE",
     }).then(({ json }) => ({
       data: json,

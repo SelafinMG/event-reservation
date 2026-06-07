@@ -1,16 +1,8 @@
+import { loginAdmin } from "@/data/auth";
+
 const authProvider = {
   login: async ({ username, password }) => {
-    const response = await fetch("http://localhost:3001/admins/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: username, password }),
-    });
-
-    if (response.status !== 200) {
-      throw new Error("Login failed");
-    }
-
-    const { token } = await response.json();
+    const { token } = await loginAdmin(username, password);
     localStorage.setItem("token", token);
     return Promise.resolve();
   },

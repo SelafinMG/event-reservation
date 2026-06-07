@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import { SpeakerDetailClient } from "./SpeakerDetailClient"
+import { getSpeaker } from "@/data/speakers"
 
 interface SpeakerDetailPageProps {
   params: Promise<{ speakerId: string }>
@@ -8,12 +9,11 @@ interface SpeakerDetailPageProps {
 export default async function SpeakerDetailPage({ params }: SpeakerDetailPageProps) {
   const { speakerId } = await params
 
-  const res = await fetch(`http://localhost:3001/v1/speakers/${speakerId}`, { cache: "no-store" })
-  if (!res.ok) {
+  try {
+    await getSpeaker(speakerId)
+  } catch {
     notFound()
   }
-
-  const speaker = await res.json()
 
   return <SpeakerDetailClient speakerId={speakerId} />
 }

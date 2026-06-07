@@ -1,16 +1,12 @@
+import { loginAdmin } from "@/data/auth";
+
 export const authProvider = {
   login: async ({ username, password }) => {
-    const response = await fetch("http://localhost:3001/admins/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: username, password }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
+    try {
+      const data = await loginAdmin(username, password);
       localStorage.setItem("auth", JSON.stringify(data.token));
       return Promise.resolve();
-    } else {
+    } catch {
       return Promise.reject("Identifiants invalides");
     }
   },

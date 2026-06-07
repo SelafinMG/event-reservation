@@ -6,6 +6,7 @@ import { ChevronUp, MessageSquare, Send, User } from "lucide-react"
 import type { Question } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { createSessionQuestion, getSessionQuestions, upvoteSessionQuestion } from "@/data/questions"
 
 interface QuestionSectionProps {
   sessionId: string
@@ -28,9 +29,7 @@ export function QuestionSection({
   useEffect(() => {
     async function loadQuestions() {
       try {
-        const res = await fetch(`http://localhost:3001/api/sessions/${sessionId}/questions`)
-        if (!res.ok) throw new Error("Failed to fetch questions")
-        const data = await res.json()
+        const data = await getSessionQuestions(sessionId)
         setQuestions(data)
       } catch (err) {
         console.error(err)
@@ -46,16 +45,10 @@ export function QuestionSection({
 
     startTransition(async () => {
       try {
-        const res = await fetch(`http://localhost:3001/api/sessions/${sessionId}/questions`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            content: newQuestion.trim(),
-            authorName: authorName.trim() || null,
-          }),
+        const result = await createSessionQuestion(sessionId, {
+          content: newQuestion.trim(),
+          authorName: authorName.trim() || null,
         })
-        if (!res.ok) throw new Error("Failed to add question")
-        const result = await res.json()
         setQuestions((prev) => [...prev, result].sort((a, b) => b.upvotes - a.upvotes))
         setNewQuestion("")
       } catch (err) {
@@ -70,12 +63,7 @@ export function QuestionSection({
 
     startTransition(async () => {
       try {
-        const res = await fetch(
-          `http://localhost:3001/api/sessions/${sessionId}/questions/${questionId}/upvote`,
-          { method: "POST" }
-        )
-        if (!res.ok) throw new Error("Failed to upvote question")
-        const updated = await res.json()
+        const updated = await upvoteSessionQuestion(sessionId, questionId)
         setVotedQuestions((prev) => new Set(prev).add(questionId))
         setQuestions((prev) =>
           prev

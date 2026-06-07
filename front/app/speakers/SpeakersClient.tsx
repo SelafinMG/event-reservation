@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Users } from "lucide-react"
 import type { Speaker } from "@/lib/types"
 import { SpeakerCard } from "@/components/SpeakerCard"
+import { getSpeakers } from "@/data/speakers"
 
 export function SpeakersClient() {
   const [speakers, setSpeakers] = useState<Speaker[]>([])
@@ -14,9 +15,7 @@ export function SpeakersClient() {
   useEffect(() => {
     async function loadSpeakers() {
       try {
-        const res = await fetch("http://localhost:3001/v1/speakers")
-        if (!res.ok) throw new Error("Failed to fetch speakers")
-        const data = await res.json()
+        const data = await getSpeakers()
 
         const normalized: Speaker[] = data.map((s: any) => ({
           id: s.id ?? s.speakerId,

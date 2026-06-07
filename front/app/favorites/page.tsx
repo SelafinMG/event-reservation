@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Star, Calendar } from "lucide-react"
 import type { Session } from "@/lib/types"
 import { SessionCard } from "@/components/SessionCard"
+import { getFavoriteSessions } from "@/data/sessions"
 
 export default function FavoritesPage() {
   const [sessions, setSessions] = useState<Session[]>([])
@@ -14,9 +15,7 @@ export default function FavoritesPage() {
   useEffect(() => {
     async function loadFavorites() {
       try {
-        const res = await fetch("http://localhost:3001/v1/favorites/sessions")
-        if (!res.ok) throw new Error("Failed to fetch favorites")
-        const favSessions = await res.json()
+        const favSessions = await getFavoriteSessions()
         setSessions(favSessions)
       } catch (err: any) {
         setError(err.message)
