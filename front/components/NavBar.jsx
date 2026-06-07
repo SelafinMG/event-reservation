@@ -14,6 +14,10 @@ export default function NavBar() {
     { href: "/favorites", label: "Favoris" },
   ];
 
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 h-16 bg-[rgba(7,7,9,0.75)] backdrop-blur-xl border-b border-white/10"
@@ -56,7 +60,7 @@ export default function NavBar() {
 
         {/* CTA */}
         <Link
-          href="/admin/login"
+          href="/admin"
           className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-white bg-linear-to-r from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/40 hover:scale-105 transition-transform"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -92,7 +96,7 @@ export default function NavBar() {
             );
           })}
           <Link
-            href="/admin/login"
+            href="/admin"
             className="block px-4 py-2 rounded-lg text-sm font-medium text-white bg-linear-to-r from-blue-600 to-indigo-500 shadow-lg shadow-blue-500/40"
           >
             Admin

@@ -1,1 +1,0 @@
-import NextPage from "next";

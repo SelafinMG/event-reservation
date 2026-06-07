@@ -1,17 +1,14 @@
 import { Admin, Resource } from "react-admin";
-import simpleRestProvider from "ra-data-simple-rest";
 import { authProvider } from "./authProvider";
+import dataProvider from "./dataProvider";
 import { EventList, EventEdit, EventCreate } from "./events";
-import { RoomList, RoomEdit, RoomCreate } from "./rooms";
+import { RoomList, RoomEdit, RoomCreate } from "./room";
 import { SessionList, SessionEdit, SessionCreate } from "./sessions";
 import { SpeakerList, SpeakerEdit, SpeakerCreate } from "./speakers";
 import { QuestionList, QuestionEdit, QuestionCreate } from "./questions";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
-const dataProvider = simpleRestProvider(`${apiUrl}/v1`);
-
 export const AppAdmin = () => (
-  <Admin dataProvider={dataProvider} authProvider={authProvider}>
+  <Admin basename="/admin" dataProvider={dataProvider} authProvider={authProvider}>
     <Resource name="events" list={EventList} edit={EventEdit} create={EventCreate} />
     <Resource name="rooms" list={RoomList} edit={RoomEdit} create={RoomCreate} />
     <Resource name="sessions" list={SessionList} edit={SessionEdit} create={SessionCreate} />
