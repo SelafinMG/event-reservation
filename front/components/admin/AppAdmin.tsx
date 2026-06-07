@@ -8,7 +8,7 @@ import { SpeakerList, SpeakerEdit, SpeakerCreate } from "./speakers";
 import { QuestionList, QuestionEdit, QuestionCreate } from "./questions";
 
 export const AppAdmin = () => (
-  <Admin basename="/admin" dataProvider={dataProvider} authProvider={authProvider}>
+  <Admin dataProvider={dataProvider} authProvider={authProvider}>
     <Resource name="events" list={EventList} edit={EventEdit} create={EventCreate} />
     <Resource name="rooms" list={RoomList} edit={RoomEdit} create={RoomCreate} />
     <Resource name="sessions" list={SessionList} edit={SessionEdit} create={SessionCreate} />
