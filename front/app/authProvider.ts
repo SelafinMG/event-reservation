@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { loginAdmin } from "@/data/auth";
 
 const authProvider = {

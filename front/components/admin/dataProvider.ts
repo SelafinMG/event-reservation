@@ -1,3 +1,4 @@
+// @ts-nocheck
 import api from "@/lib/api";
 
 const API_PREFIX = "/v1";

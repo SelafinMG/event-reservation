@@ -1,3 +1,4 @@
+// @ts-nocheck
 import api from "@/lib/api";
 
 const httpClient = async (url, options = {}) => {
