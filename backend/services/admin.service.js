@@ -10,11 +10,14 @@ export const loginAdminService = async (email, password) => {
   const match = await bcrypt.compare(password, admin.password_hash);
   if (!match) return null;
 
-  const token = jwt.sign(
-    { id: admin.id, email: admin.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "2h" }
-  );
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error("JWT_SECRET is not set. Define it in your environment or .env file.");
+  }
+
+  const token = jwt.sign({ id: admin.id, email: admin.email }, secret, {
+    expiresIn: "2h",
+  });
 
   return { token };
 };
