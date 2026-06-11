@@ -5,7 +5,7 @@ export const RoomList = () => (
   <List>
     <Datagrid>
       <TextField source="name" />
-      <TextField source="event_id" />
+      <TextField source="eventId" />
       <EditButton />
     </Datagrid>
   </List>
@@ -15,7 +15,7 @@ export const RoomEdit = () => (
   <Edit>
     <SimpleForm>
       <TextInput source="name" />
-      <ReferenceInput source="event_id" reference="events">
+      <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
       </ReferenceInput>
     </SimpleForm>
@@ -26,7 +26,7 @@ export const RoomCreate = () => (
   <Create>
     <SimpleForm>
       <TextInput source="name" />
-      <ReferenceInput source="event_id" reference="events">
+      <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
       </ReferenceInput>
     </SimpleForm>

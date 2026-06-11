@@ -6,8 +6,8 @@ export const SessionList = () => (
     <Datagrid>
       <TextField source="title" />
       <TextField source="description" />
-      <DateField source="start_time" />
-      <DateField source="end_time" />
+      <DateField source="startTime" />
+      <DateField source="endTime" />
       <NumberInput source="capacity" />
       <EditButton />
     </Datagrid>
@@ -19,13 +19,13 @@ export const SessionEdit = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="description" />
-      <DateInput source="start_time" />
-      <DateInput source="end_time" />
+      <DateInput source="startTime" />
+      <DateInput source="endTime" />
       <NumberInput source="capacity" />
-      <ReferenceInput source="event_id" reference="events">
+      <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
       </ReferenceInput>
-      <ReferenceInput source="room_id" reference="rooms">
+      <ReferenceInput source="roomId" reference="rooms">
         <SelectInput optionText="name" />
       </ReferenceInput>
     </SimpleForm>
@@ -37,13 +37,13 @@ export const SessionCreate = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="description" />
-      <DateInput source="start_time" />
-      <DateInput source="end_time" />
+      <DateInput source="startTime" />
+      <DateInput source="endTime" />
       <NumberInput source="capacity" />
-      <ReferenceInput source="event_id" reference="events">
+      <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
       </ReferenceInput>
-      <ReferenceInput source="room_id" reference="rooms">
+      <ReferenceInput source="roomId" reference="rooms">
         <SelectInput optionText="name" />
       </ReferenceInput>
     </SimpleForm>

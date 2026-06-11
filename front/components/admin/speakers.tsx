@@ -4,9 +4,9 @@ import { List, Datagrid, TextField, EditButton, Edit, SimpleForm, TextInput, Cre
 export const SpeakerList = () => (
   <List>
     <Datagrid>
-      <TextField source="full_name" />
+      <TextField source="fullName" />
       <TextField source="bio" />
-      <TextField source="photo_url" />
+      <TextField source="photoUrl" />
       <EditButton />
     </Datagrid>
   </List>
@@ -15,9 +15,9 @@ export const SpeakerList = () => (
 export const SpeakerEdit = () => (
   <Edit>
     <SimpleForm>
-      <TextInput source="full_name" />
+      <TextInput source="fullName" />
       <TextInput source="bio" />
-      <TextInput source="photo_url" />
+      <TextInput source="photoUrl" />
     </SimpleForm>
   </Edit>
 );
@@ -25,9 +25,9 @@ export const SpeakerEdit = () => (
 export const SpeakerCreate = () => (
   <Create>
     <SimpleForm>
-      <TextInput source="full_name" />
+      <TextInput source="fullName" />
       <TextInput source="bio" />
-      <TextInput source="photo_url" />
+      <TextInput source="photoUrl" />
     </SimpleForm>
   </Create>
 );
