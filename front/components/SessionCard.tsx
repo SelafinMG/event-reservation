@@ -22,34 +22,27 @@ export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
     setFavorite(isFavorite(session.id))
   }, [session.id])
 
-  const startTime = new Date(session.startTime)
-  const endTime = new Date(session.endTime)
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("fr-FR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  }
-
-  const toggleFavorite = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (favorite) {
-      removeFavorite(session.id)
-    } else {
-      addFavorite(session.id)
-    }
-    setFavorite(!favorite)
-  }
+  const toggleFav = (e: React.MouseEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    const favs: string[] = JSON.parse(localStorage.getItem("eventsync_favs") || "[]");
+    const next = isFav ? favs.filter(id => id !== session.id) : [...favs, session.id];
+    localStorage.setItem("eventsync_favs", JSON.stringify(next));
+    setIsFav(!isFav);
+    window.dispatchEvent(new Event("fav-change"));
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ scale: 1.02 }}
-      className="group"
+    <Link
+      href={`/events/${eventId}/sessions/${session.id}`}
+      className="group relative block rounded-xl overflow-hidden transition-all duration-300 h-full"
+      style={{
+        background: session.isLive ? "rgba(220,55,45,0.055)" : "rgba(200,218,248,0.04)",
+        backdropFilter: "blur(14px)",
+        WebkitBackdropFilter: "blur(14px)",
+        border: session.isLive
+          ? "1px solid rgba(220,55,45,0.2)"
+          : "1px solid rgba(200,218,248,0.06)",
+      }}
     >
       <Link href={`/events/${eventId}/sessions/${session.id}`}>
         <div className="relative bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-5 overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
