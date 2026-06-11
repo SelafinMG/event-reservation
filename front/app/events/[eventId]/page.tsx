@@ -4,7 +4,7 @@ import { getEvent, formatDateShort } from "@/lib/mockApi";
 import { EventDetailClient } from "./EventsDetailClient"
 import { getEventById } from "@/lib/mockApi"
 import SessionExplorer from "@/components/SessionExplorer";
-import BadgeLive from "@/components/BadgeLive";
+import {BadgeLive} from "@/components/BadgeLive";
 
 interface EventDetailPageProps {
   params: Promise<{ eventId: string }>
