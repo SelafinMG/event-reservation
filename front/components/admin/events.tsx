@@ -6,8 +6,8 @@ export const EventList = () => (
     <Datagrid>
       <TextField source="title" />
       <TextField source="location" />
-      <DateField source="start_date" />
-      <DateField source="end_date" />
+      <DateField source="startDate" />
+      <DateField source="endDate" />
       <EditButton />
     </Datagrid>
   </List>
@@ -18,8 +18,8 @@ export const EventEdit = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="location" />
-      <DateInput source="start_date" />
-      <DateInput source="end_date" />
+      <DateInput source="startDate" />
+      <DateInput source="endDate" />
       <TextInput source="description" />
     </SimpleForm>
   </Edit>
@@ -30,8 +30,8 @@ export const EventCreate = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="location" />
-      <DateInput source="start_date" />
-      <DateInput source="end_date" />
+      <DateInput source="startDate" />
+      <DateInput source="endDate" />
       <TextInput source="description" />
     </SimpleForm>
   </Create>
