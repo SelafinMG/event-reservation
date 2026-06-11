@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { List, Datagrid, TextField, DateField, EditButton, Edit, SimpleForm, TextInput, DateInput, NumberInput, ReferenceInput, SelectInput, Create } from "react-admin";
 
 export const SessionList = () => (

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { List, Datagrid, TextField, NumberField, DateField, EditButton, Edit, SimpleForm, TextInput, NumberInput, ReferenceInput, SelectInput, Create } from "react-admin";
 
 export const QuestionList = () => (

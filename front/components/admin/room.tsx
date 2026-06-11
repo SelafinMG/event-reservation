@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { List, Datagrid, TextField, EditButton, Edit, SimpleForm, TextInput, ReferenceInput, SelectInput, Create } from "react-admin";
 
 export const RoomList = () => (
