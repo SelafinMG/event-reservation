@@ -4,18 +4,24 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Star, Calendar } from "lucide-react"
 import type { Session } from "@/lib/types"
-import { getFavoriteSessions } from "@/lib/mockApi"
 import { SessionCard } from "@/components/SessionCard"
+import { getFavoriteSessions } from "@/data/sessions"
 
 export default function FavoritesPage() {
   const [sessions, setSessions] = useState<Session[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const loadFavorites = async () => {
-      const favSessions = await getFavoriteSessions()
-      setSessions(favSessions)
-      setLoading(false)
+    async function loadFavorites() {
+      try {
+        const favSessions = await getFavoriteSessions()
+        setSessions(favSessions)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
     }
     loadFavorites()
   }, [])
@@ -30,6 +36,14 @@ export default function FavoritesPage() {
             className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full"
           />
         </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
+        <p className="text-red-500">Erreur : {error}</p>
       </div>
     )
   }
@@ -62,15 +76,7 @@ export default function FavoritesPage() {
           {sessions.map((session, index) => (
             <SessionCard
               key={session.id}
-              session={{
-                id: session.id,
-                title: session.title,
-                startTime: session.startTime,
-                endTime: session.endTime,
-                room: session.room,
-                isLive: session.isLive,
-                speakers: session.speakers,
-              }}
+              session={session}
               eventId={session.eventId}
               index={index}
             />

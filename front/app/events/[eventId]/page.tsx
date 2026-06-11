@@ -83,3 +83,4 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
     </div>
   );
 }
+

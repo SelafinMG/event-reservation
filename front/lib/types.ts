@@ -1,5 +1,3 @@
-// Types basés sur l'API OAS3 EventSync
-
 export interface Event {
   id: string
   title: string
@@ -7,6 +5,7 @@ export interface Event {
   startDate: string
   endDate: string
   location: string
+  createdAt?: string
   sessions?: SessionSummary[]
 }
 
@@ -30,6 +29,7 @@ export interface Session {
   isLive?: boolean
   speakers: SpeakerSummary[]
   questions?: Question[]
+  createdAt?: string
 }
 
 export interface SessionSummary {

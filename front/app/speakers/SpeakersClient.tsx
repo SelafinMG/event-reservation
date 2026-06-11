@@ -1,15 +1,50 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Users } from "lucide-react"
 import type { Speaker } from "@/lib/types"
 import { SpeakerCard } from "@/components/SpeakerCard"
+import { getSpeakers } from "@/data/speakers"
 
-interface SpeakersClientProps {
-  speakers: Speaker[]
-}
+export function SpeakersClient() {
+  const [speakers, setSpeakers] = useState<Speaker[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-export function SpeakersClient({ speakers }: SpeakersClientProps) {
+  useEffect(() => {
+    async function loadSpeakers() {
+      try {
+        const data = await getSpeakers()
+
+        const normalized: Speaker[] = data.map((s: any) => ({
+          id: s.id ?? s.speakerId,
+          fullName: s.fullName,
+          photoUrl: s.photoUrl,
+          bio: s.bio,
+          links: s.links ?? [],
+          sessions: s.sessions ?? []
+        }))
+
+        console.log("Speakers loaded:", normalized)
+        setSpeakers(normalized)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadSpeakers()
+  }, [])
+
+  if (loading) {
+    return <p className="text-center py-10">Chargement des intervenants...</p>
+  }
+
+  if (error) {
+    return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header */}

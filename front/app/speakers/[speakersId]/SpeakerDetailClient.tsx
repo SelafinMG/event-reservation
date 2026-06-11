@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, Globe, Calendar } from "lucide-react"
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa"
@@ -7,9 +8,10 @@ import Link from "next/link"
 import Image from "next/image"
 import type { Speaker } from "@/lib/types"
 import { BadgeLive } from "@/components/BadgeLive"
+import { getSpeaker } from "@/data/speakers"
 
 interface SpeakerDetailClientProps {
-  speaker: Speaker
+  speakerId: string
 }
 
 const socialIcons = {
@@ -28,7 +30,29 @@ const socialLabels = {
   other: "Link",
 }
 
-export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
+export function SpeakerDetailClient({ speakerId }: SpeakerDetailClientProps) {
+  const [speaker, setSpeaker] = useState<Speaker | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadSpeaker() {
+      try {
+        const data = await getSpeaker(speakerId)
+        setSpeaker(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadSpeaker()
+  }, [speakerId])
+
+  if (loading) return <p className="text-center py-10">Chargement du profil...</p>
+  if (error) return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
+  if (!speaker) return <p className="text-center py-10">Intervenant introuvable</p>
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Back */}
@@ -55,10 +79,16 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-primary/30 flex-shrink-0"
+            className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-primary/30 shrink-0"
           >
             {speaker.photoUrl ? (
-              <Image src={speaker.photoUrl} alt={speaker.fullName} fill className="object-cover" />
+              <Image
+                src={speaker.photoUrl}
+                alt={speaker.fullName}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 160px"
+                className="object-cover"
+              />
             ) : (
               <div className="w-full h-full bg-primary/20 flex items-center justify-center text-4xl font-bold text-primary">
                 {speaker.fullName.charAt(0)}
@@ -102,11 +132,7 @@ export function SpeakerDetailClient({ speaker }: SpeakerDetailClientProps) {
 
       {/* Sessions */}
       {speaker.sessions && speaker.sessions.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-primary" />
             Sessions ({speaker.sessions.length})
