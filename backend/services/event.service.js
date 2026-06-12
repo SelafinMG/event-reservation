@@ -57,7 +57,7 @@ const fetchEventById = async (eventId) => {
       sessions,
     };
   } catch (err) {
-    // 22P02 = invalid UUID format → treat as not found
+    
     if (err.code === '22P02') return null;
     console.error('[fetchEventById]', err.message);
     throw err;

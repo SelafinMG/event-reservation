@@ -8,6 +8,7 @@ import Link from "next/link"
 import Image from "next/image"
 import type { Speaker } from "@/lib/types"
 import { BadgeLive } from "@/components/BadgeLive"
+import { getSpeaker } from "@/data/speakers"
 
 interface SpeakerDetailClientProps {
   speakerId: string
@@ -37,9 +38,7 @@ export function SpeakerDetailClient({ speakerId }: SpeakerDetailClientProps) {
   useEffect(() => {
     async function loadSpeaker() {
       try {
-        const res = await fetch(`http://localhost:3001/v1/speakers/${speakerId}`)
-        if (!res.ok) throw new Error("Failed to fetch speaker")
-        const data = await res.json()
+        const data = await getSpeaker(speakerId)
         setSpeaker(data)
       } catch (err: any) {
         setError(err.message)

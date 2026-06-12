@@ -36,23 +36,31 @@
     "sessionId": "sess-003",
     "content": "Comment évaluer la performance d'un modèle de classification ?",
     "authorName": null,
-    "upvotes": 22,
-    "createdAt": "2025-06-10T11:15:00Z"
+    "upvotes": 8,
+    "createdAt": "2025-06-10T11:08:00Z"
+  },
+  {
+    "id": "q-005",
+    "sessionId": "sess-001",
+    "content": "Quelle est la vision long terme de la plateforme EventSync ?",
+    "authorName": "Admin",
+    "upvotes": 42,
+    "createdAt": "2025-06-10T09:15:00Z"
   },
   {
     "id": "q-006",
-    "sessionId": "sess-005",
-    "content": "Quelle est la différence entre un Deployment et un StatefulSet ?",
-    "authorName": "Alex K.",
-    "upvotes": 18,
-    "createdAt": "2025-06-10T15:45:00Z"
+    "sessionId": "sess-001",
+    "content": "Prévoyez-vous une application mobile native ?",
+    "authorName": "Sophie L.",
+    "upvotes": 12,
+    "createdAt": "2025-06-10T09:20:00Z"
   },
   {
     "id": "q-007",
-    "sessionId": "sess-007",
-    "content": "Quel est le coût d'inférence moyen pour un LLM en production ?",
-    "authorName": "Julie R.",
-    "upvotes": 31,
-    "createdAt": "2025-06-11T10:50:00Z"
+    "sessionId": "sess-003",
+    "content": "Comment optimiser les performances LCP sur Next.js 15 ?",
+    "authorName": "Marc A.",
+    "upvotes": 15,
+    "createdAt": "2025-06-10T11:45:00Z"
   }
 ]
