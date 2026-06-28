@@ -1,10 +1,24 @@
 // controllers/session.admin.controller.js
-import { getSessionsByEventService, getSessionByIdService, createSessionService, updateSessionService, deleteSessionService } from '../services/session.admin.service.js';
+import { getSessionsByEventService, getAllSessionsService, getSessionByIdService, createSessionService, updateSessionService, deleteSessionService } from '../services/session.admin.service.js';
 
 export const getSessionsByEventController = async (req, res) => {
   const sessions = await getSessionsByEventService(req.params.eventId, req.query);
   if (!sessions) return res.status(404).json({ code: 'NOT_FOUND', message: 'Event not found.' });
   return res.status(200).json(sessions);
+};
+
+export const getAllSessionsController = async (req, res) => {
+  const sessions = await getAllSessionsService();
+  return res.status(200).json(sessions);
+};
+
+export const createSessionFlatController = async (req, res) => {
+  const { eventId, title, startTime, endTime, roomId } = req.body;
+  if (!eventId || !title || !startTime || !endTime || !roomId) {
+    return res.status(400).json({ code: 'VALIDATION_ERROR', message: 'Required fields: eventId, title, startTime, endTime, roomId.' });
+  }
+  const session = await createSessionService(eventId, req.body);
+  return res.status(201).json(session);
 };
 
 export const getSessionByIdController = async (req, res) => {

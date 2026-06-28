@@ -37,6 +37,7 @@ const fetchSessionById = async (sessionId) => {
       endTime: session.end_time,
       capacity: session.capacity,
       isLive: session.is_live,
+      roomId: session.room_id,
       room: { id: session.room_id, name: session.room_name },
       speakers: speakers.map((sp) => ({
         id: sp.id,
@@ -55,6 +56,24 @@ const fetchSessionById = async (sessionId) => {
   } catch (err) {
     if (err.code === '22P02') return null;
     console.error('[fetchSessionById]', err.message);
+    throw err;
+  }
+};
+
+export const getAllSessionsService = async () => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT s.id, s.event_id AS "eventId", s.title, s.description,
+              s.start_time AS "startTime", s.end_time AS "endTime",
+              s.capacity, s.room_id AS "roomId", r.name AS "roomName",
+              (NOW() BETWEEN s.start_time AND s.end_time) AS "isLive"
+       FROM sessions s
+       JOIN rooms r ON r.id = s.room_id
+       ORDER BY s.start_time`
+    );
+    return rows;
+  } catch (err) {
+    console.error('[getAllSessionsService]', err.message);
     throw err;
   }
 };
