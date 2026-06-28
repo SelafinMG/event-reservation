@@ -15,6 +15,12 @@ interface SessionCardProps {
   index?: number
 }
 
+function formatTime(value: string) {
+  const date = new Date(value)
+  if (isNaN(date.getTime())) return value
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+}
+
 export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
   const [favorite, setFavorite] = useState(false)
 
@@ -22,12 +28,14 @@ export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
     setFavorite(isFavorite(session.id))
   }, [session.id])
 
-  const toggleFav = (e: React.MouseEvent) => {
+  const toggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault(); e.stopPropagation();
-    const favs: string[] = JSON.parse(localStorage.getItem("eventsync_favs") || "[]");
-    const next = isFav ? favs.filter(id => id !== session.id) : [...favs, session.id];
-    localStorage.setItem("eventsync_favs", JSON.stringify(next));
-    setIsFav(!isFav);
+    if (favorite) {
+      removeFavorite(session.id);
+    } else {
+      addFavorite(session.id);
+    }
+    setFavorite(!favorite);
     window.dispatchEvent(new Event("fav-change"));
   };
 
@@ -44,7 +52,6 @@ export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
           : "1px solid rgba(200,218,248,0.06)",
       }}
     >
-      <Link href={`/events/${eventId}/sessions/${session.id}`}>
         <div className="relative bg-card/60 backdrop-blur-sm border border-border/50 rounded-xl p-5 overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
           {/* Background gradient */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -68,7 +75,7 @@ export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-primary" />
                   <span>
-                    {formatTime(startTime)} - {formatTime(endTime)}
+                    {formatTime(session.startTime)} - {formatTime(session.endTime)}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -117,6 +124,7 @@ export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
             {/* Favorite button */}
             <motion.button
               onClick={toggleFavorite}
+              type="button"
               whileTap={{ scale: 0.9 }}
               className="p-2 rounded-full hover:bg-muted/50 transition-colors"
             >
@@ -130,7 +138,6 @@ export function SessionCard({ session, eventId, index = 0 }: SessionCardProps) {
             </motion.button>
           </div>
         </div>
-      </Link>
-    </motion.div>
+    </Link>
   )
 }

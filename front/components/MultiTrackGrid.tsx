@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import type { SessionSummary } from "@/lib/mockApi";
-import SessionCard from "./SessionCard";
+import type { SessionSummary } from "@/lib/types";
+import { SessionCard } from "./SessionCard";
 
 interface MultiTrackGridProps {
   sessions: SessionSummary[];

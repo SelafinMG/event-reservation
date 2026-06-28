@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { SessionSummary, Room } from "@/lib/mockApi";
-import SessionCard from "./SessionCard";
+import type { SessionSummary, Room } from "@/lib/types";
+import { SessionCard } from "./SessionCard";
 import MultiTrackGrid from "./MultiTrackGrid";
 import Link from "next/link";
 
@@ -181,6 +181,7 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
             </div>
           ))
         )}
+        </div>
       </div>
     </div>
   );
