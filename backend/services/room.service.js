@@ -14,6 +14,32 @@ export const getRoomsByEventService = async (eventId) => {
   }
 };
 
+export const getAllRoomsService = async () => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT id, name, event_id AS "eventId" FROM rooms ORDER BY name'
+    );
+    return rows;
+  } catch (err) {
+    console.error('[getAllRoomsService]', err.message);
+    throw err;
+  }
+};
+
+export const getRoomByIdService = async (roomId) => {
+  try {
+    const { rows: [room] } = await pool.query(
+      'SELECT id, name, event_id AS "eventId" FROM rooms WHERE id = $1',
+      [roomId]
+    );
+    return room ?? null;
+  } catch (err) {
+    if (err.code === '22P02') return null;
+    console.error('[getRoomByIdService]', err.message);
+    throw err;
+  }
+};
+
 export const createRoomService = async (eventId, name) => {
   try {
     const { rows: [room] } = await pool.query(
