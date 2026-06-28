@@ -10,6 +10,7 @@ import { roomsByEventRouter, roomsRouter } from "./routes/room.route.js"
 import speakerRoute from "./routes/speaker.route.js"
 import { sessionsByEventRouter, sessionsRouter } from "./routes/session.admin.route.js"
 import favoritesRoute from "./routes/favorites.routes.js"
+import questionRoute from "./routes/question.route.js"
 
 dotenv.config()
 
@@ -26,6 +27,7 @@ app.use("/v1/rooms", roomsRouter)
 app.use("/v1/sessions", sessionsRouter)
 app.use("/v1/sessions", sessionRoute)
 app.use("/v1/speakers", speakerRoute)
+app.use("/v1/questions", questionRoute)
 app.use("/v1/favorites", favoritesRoute)
 
 app.use((err, req, res, next) => {
