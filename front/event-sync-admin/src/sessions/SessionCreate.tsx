@@ -1,15 +1,15 @@
 // src/sessions/SessionCreate.tsx
-import { Create, SimpleForm, TextInput, DateInput, BooleanInput, NumberInput, ReferenceInput, SelectInput, required } from "react-admin"
+import { Create, SimpleForm, TextInput, DateTimeInput, BooleanInput, NumberInput, ReferenceInput, SelectInput, required } from "react-admin"
 
 export const SessionCreate = () => (
   <Create>
     <SimpleForm>
       <TextInput source="title" validate={required()} />
       <TextInput source="description" />
-      <DateInput source="startTime" validate={required()} />
-      <DateInput source="endTime" validate={required()} />
+      <DateTimeInput source="startTime" validate={required()} />
+      <DateTimeInput source="endTime" validate={required()} />
       <BooleanInput source="isLive" />
-      <NumberInput resource="capacity" />
+      <NumberInput source="capacity" />
       <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
       </ReferenceInput>

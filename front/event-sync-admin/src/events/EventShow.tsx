@@ -7,8 +7,8 @@ export const EventShow = () => (
     <SimpleShowLayout>
       <TextField source="title" />
       <TextField source="description" />
-      <DateField source="startDate" />
-      <DateField source="endDate" />
+      <DateField source="startDate" showTime />
+      <DateField source="endDate" showTime />
       <SessionsByEvent />
     </SimpleShowLayout>
   </Show>

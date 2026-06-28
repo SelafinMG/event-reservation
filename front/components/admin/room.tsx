@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { List, Datagrid, TextField, EditButton, Edit, SimpleForm, TextInput, ReferenceInput, SelectInput, Create } from "react-admin";
+import { List, Datagrid, TextField, EditButton, Edit, SimpleForm, TextInput, ReferenceInput, SelectInput, Create, required } from "react-admin";
 
 export const RoomList = () => (
   <List>
@@ -14,9 +14,9 @@ export const RoomList = () => (
 export const RoomEdit = () => (
   <Edit>
     <SimpleForm>
-      <TextInput source="name" />
+      <TextInput source="name" validate={required()} />
       <ReferenceInput source="eventId" reference="events">
-        <SelectInput optionText="title" />
+        <SelectInput optionText="title" validate={required()} />
       </ReferenceInput>
     </SimpleForm>
   </Edit>
@@ -25,9 +25,9 @@ export const RoomEdit = () => (
 export const RoomCreate = () => (
   <Create>
     <SimpleForm>
-      <TextInput source="name" />
+      <TextInput source="name" validate={required()} />
       <ReferenceInput source="eventId" reference="events">
-        <SelectInput optionText="title" />
+        <SelectInput optionText="title" validate={required()} />
       </ReferenceInput>
     </SimpleForm>
   </Create>

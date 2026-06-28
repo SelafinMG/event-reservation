@@ -1,13 +1,13 @@
 // @ts-nocheck
-import { List, Datagrid, TextField, DateField, EditButton, Edit, SimpleForm, TextInput, DateInput, Create } from "react-admin";
+import { List, Datagrid, TextField, DateField, EditButton, Edit, SimpleForm, TextInput, DateTimeInput, Create } from "react-admin";
 
 export const EventList = () => (
   <List>
     <Datagrid>
       <TextField source="title" />
       <TextField source="location" />
-      <DateField source="startDate" />
-      <DateField source="endDate" />
+      <DateField source="startDate" showTime />
+      <DateField source="endDate" showTime />
       <EditButton />
     </Datagrid>
   </List>
@@ -18,8 +18,8 @@ export const EventEdit = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="location" />
-      <DateInput source="startDate" />
-      <DateInput source="endDate" />
+      <DateTimeInput source="startDate" />
+      <DateTimeInput source="endDate" />
       <TextInput source="description" />
     </SimpleForm>
   </Edit>
@@ -30,8 +30,8 @@ export const EventCreate = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="location" />
-      <DateInput source="startDate" />
-      <DateInput source="endDate" />
+      <DateTimeInput source="startDate" />
+      <DateTimeInput source="endDate" />
       <TextInput source="description" />
     </SimpleForm>
   </Create>

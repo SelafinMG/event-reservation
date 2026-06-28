@@ -7,8 +7,8 @@ export const SessionShow = () => (
     <SimpleShowLayout>
       <TextField source="title" />
       <TextField source="description" />
-      <DateField source="startTime" />
-      <DateField source="endTime" />
+      <DateField source="startTime" showTime />
+      <DateField source="endTime" showTime />
       <BooleanField source="isLive" />
       <TextField source="capacity" />
       <ReferenceField source="eventId" reference="events" />
