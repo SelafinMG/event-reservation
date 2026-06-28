@@ -1,13 +1,13 @@
 // @ts-nocheck
-import { List, Datagrid, TextField, DateField, EditButton, Edit, SimpleForm, TextInput, DateInput, NumberInput, ReferenceInput, SelectInput, Create } from "react-admin";
+import { List, Datagrid, TextField, DateField, EditButton, Edit, SimpleForm, TextInput, DateTimeInput, NumberInput, ReferenceInput, SelectInput, Create } from "react-admin";
 
 export const SessionList = () => (
   <List>
     <Datagrid>
       <TextField source="title" />
       <TextField source="description" />
-      <DateField source="startTime" />
-      <DateField source="endTime" />
+      <DateField source="startTime" showTime />
+      <DateField source="endTime" showTime />
       <NumberInput source="capacity" />
       <EditButton />
     </Datagrid>
@@ -19,8 +19,8 @@ export const SessionEdit = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="description" />
-      <DateInput source="startTime" />
-      <DateInput source="endTime" />
+      <DateTimeInput source="startTime" />
+      <DateTimeInput source="endTime" />
       <NumberInput source="capacity" />
       <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
@@ -37,8 +37,8 @@ export const SessionCreate = () => (
     <SimpleForm>
       <TextInput source="title" />
       <TextInput source="description" />
-      <DateInput source="startTime" />
-      <DateInput source="endTime" />
+      <DateTimeInput source="startTime" />
+      <DateTimeInput source="endTime" />
       <NumberInput source="capacity" />
       <ReferenceInput source="eventId" reference="events">
         <SelectInput optionText="title" />
