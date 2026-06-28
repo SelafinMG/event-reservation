@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar, Clock, MapPin, Users, Star } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { BadgeLive } from "@/components/BadgeLive"
-import { QuestionSection } from "@/components/QuestionSection"
+import QuestionSection from "@/components/QuestionSection"
 import type { Session, Event } from "@/lib/types"
 import { useState } from "react"
 

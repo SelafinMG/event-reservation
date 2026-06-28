@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getEvent, formatDateShort } from "@/lib/mockApi";
-import { EventDetailClient } from "./EventsDetailClient"
-import { getEventById } from "@/lib/mockApi"
+import { getEvent } from "@/data/events";
+import { formatDateShort } from "@/lib/utils";
+import type { Event } from "@/lib/types";
 import SessionExplorer from "@/components/SessionExplorer";
-import {BadgeLive} from "@/components/BadgeLive";
+import { BadgeLive } from "@/components/BadgeLive";
 
 interface EventDetailPageProps {
   params: Promise<{ eventId: string }>
@@ -19,13 +19,19 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   
-  const event = getEvent(resolvedParams.eventId);
+  let event: Event | undefined;
+  try {
+    event = await getEvent(resolvedParams.eventId);
+  } catch {
+    notFound();
+  }
   if (!event) notFound();
 
   const selectedRoomId = typeof resolvedSearchParams?.room === 'string' ? resolvedSearchParams.room : null;
 
-  const liveSessions = event.sessions.filter(s => s.isLive);
-  const rooms = Array.from(new Map(event.sessions.map(s => [s.room.id, s.room])).values());
+  const sessions = event.sessions ?? [];
+  const liveSessions = sessions.filter(s => s.isLive);
+  const rooms = Array.from(new Map(sessions.map(s => [s.room.id, s.room])).values());
 
   return (
     <div className="max-w-4xl mx-auto px-5 sm:px-6 py-12">
@@ -47,7 +53,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
         }} />
 
         <div className="p-7 sm:p-8">
-          {liveSessions.length > 0 && <div className="mb-3"><BadgeLive size="sm" /></div>}
+          {liveSessions.length > 0 && <div className="mb-3"><BadgeLive /></div>}
 
           <h1 className="text-2xl sm:text-3xl font-medium mb-3 tracking-tight" style={{ color:"rgba(225,235,252,0.94)", letterSpacing:"-0.025em" }}>
             {event.title}
@@ -61,7 +67,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
             {[
               { label:"Dates", val:`${formatDateShort(event.startDate)} — ${formatDateShort(event.endDate)}` },
               { label:"Lieu",  val: event.location.split(",")[0] },
-              { label:"Sessions", val:`${event.sessions.length} · ${rooms.length} salles` },
+              { label:"Sessions", val:`${sessions.length} · ${rooms.length} salles` },
             ].map(({ label, val }) => (
               <div key={label} className="px-4 py-3 rounded-xl"
                 style={{ background:"rgba(200,218,248,0.04)", border:"1px solid rgba(200,218,248,0.06)" }}>
@@ -75,7 +81,7 @@ export default async function EventDetailPage({ params, searchParams }: Props) {
 
       {/* Sessions Explorer (Filters + Grid) */}
       <SessionExplorer 
-        sessions={event.sessions} 
+        sessions={sessions} 
         eventId={event.id} 
         rooms={rooms} 
         selectedRoomId={selectedRoomId} 
