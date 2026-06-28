@@ -7,7 +7,8 @@ import Image from "next/image"
 import { BadgeLive } from "@/components/BadgeLive"
 import QuestionSection from "@/components/QuestionSection"
 import type { Session, Event } from "@/lib/types"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { isFavorite, addFavorite, removeFavorite } from "@/lib/mockApi"
 
 interface SessionDetailClientProps {
   session: Session
@@ -16,6 +17,10 @@ interface SessionDetailClientProps {
 
 export function SessionDetailClient({ session, event }: SessionDetailClientProps) {
   const [favorite, setFavorite] = useState(false)
+
+  useEffect(() => {
+    setFavorite(isFavorite(session.id))
+  }, [session.id])
 
   const startTime = new Date(session.startTime)
   const endTime = new Date(session.endTime)
@@ -27,8 +32,13 @@ export function SessionDetailClient({ session, event }: SessionDetailClientProps
     date.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })
 
   const toggleFavorite = () => {
+    if (favorite) {
+      removeFavorite(session.id)
+    } else {
+      addFavorite(session.id)
+    }
     setFavorite(!favorite)
-    // ⚡ Ici tu pourras brancher ton backend pour gérer les favoris
+    window.dispatchEvent(new Event("fav-change"))
   }
 
   return (
