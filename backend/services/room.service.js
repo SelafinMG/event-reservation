@@ -50,10 +50,12 @@ export const getRoomByIdService = async (roomId) => {
 export const createRoomService = async (eventId, name) => {
   try {
     const { rows: [room] } = await pool.query(
-      'INSERT INTO rooms (event_id, name) VALUES ($1, $2) RETURNING id, name',
+      `INSERT INTO rooms (event_id, name) VALUES ($1, $2)
+       RETURNING id`,
       [eventId, name]
     );
-    return room;
+    // Return full object with eventName
+    return getRoomByIdService(room.id);
   } catch (err) {
     console.error('[createRoomService]', err.message);
     throw err;
@@ -62,11 +64,13 @@ export const createRoomService = async (eventId, name) => {
 
 export const updateRoomService = async (roomId, name) => {
   try {
-    const { rows: [room] } = await pool.query(
-      'UPDATE rooms SET name = $1 WHERE id = $2 RETURNING id, name',
+    const { rowCount } = await pool.query(
+      'UPDATE rooms SET name = $1 WHERE id = $2',
       [name, roomId]
     );
-    return room ?? null;
+    if (!rowCount) return null;
+    // Return full object with eventId and eventName
+    return getRoomByIdService(roomId);
   } catch (err) {
     if (err.code === '22P02') return null;
     console.error('[updateRoomService]', err.message);
