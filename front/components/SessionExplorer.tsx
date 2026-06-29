@@ -23,7 +23,7 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
   // Load favorites from localStorage
   useEffect(() => {
     const loadFavs = () => {
-      const favs = JSON.parse(localStorage.getItem("eventsync_favs") || "[]");
+      const favs = JSON.parse(localStorage.getItem("eventsync-favorites") || "[]");
       setFavorites(favs);
     };
     loadFavs();
