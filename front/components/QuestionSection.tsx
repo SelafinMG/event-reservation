@@ -135,7 +135,7 @@ export default function QuestionSection({
             <User className="w-4 h-4" />
             <Input
               type="text"
-              placeholder="Votre nom (optionnel)"
+              placeholder="Your name (optional)"
               value={authorName}
               onChange={(e) => setAuthorName(e.target.value)}
               className="h-8 w-40 bg-background/50 border-border/50"
@@ -146,7 +146,7 @@ export default function QuestionSection({
         <div className="flex gap-2">
           <Input
             type="text"
-            placeholder="Posez une question..."
+            placeholder="Ask a question..."
             value={newQuestion}
             onChange={(e) => setNewQuestion(e.target.value)}
             className="flex-1 bg-background/50 border-border/50"
@@ -160,7 +160,7 @@ export default function QuestionSection({
 
       {questions.length === 0 ? (
         <p className="text-center text-[12px] py-8 font-light" style={{ color: "rgba(140,162,205,0.30)" }}>
-          {isLive ? "Aucune question pour l'instant — soyez le premier !" : "Aucune question."}
+          {isLive ? "No questions yet — be the first!" : "No questions."}
         </p>
       ) : (
         <div className="space-y-2.5">
@@ -200,7 +200,7 @@ export default function QuestionSection({
                         <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                         </svg>
-                        POPULAIRE
+                        POPULAR
                       </span>
                     )}
 

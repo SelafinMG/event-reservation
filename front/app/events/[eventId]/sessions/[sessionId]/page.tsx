@@ -8,7 +8,6 @@ interface SessionDetailPageProps {
 }
 
 export default async function SessionDetailPage({ params }: SessionDetailPageProps) {
-  // ⚡ Ici on attend la Promise
   const { eventId, sessionId } = await params
 
   let session

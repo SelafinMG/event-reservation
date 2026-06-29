@@ -38,11 +38,11 @@ export function SpeakersClient() {
   }, [])
 
   if (loading) {
-    return <p className="text-center py-10">Chargement des intervenants...</p>
+    return <p className="text-center py-10">Speakers Loading...</p>
   }
 
   if (error) {
-    return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
+    return <p className="text-center py-10 text-red-500">Error : {error}</p>
   }
 
   return (

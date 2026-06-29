@@ -43,7 +43,7 @@ export default function FavoritesPage() {
   if (error) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
-        <p className="text-red-500">Erreur : {error}</p>
+        <p className="text-red-500">Error : {error}</p>
       </div>
     )
   }

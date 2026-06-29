@@ -49,9 +49,9 @@ export function SpeakerDetailClient({ speakerId }: SpeakerDetailClientProps) {
     loadSpeaker()
   }, [speakerId])
 
-  if (loading) return <p className="text-center py-10">Chargement du profil...</p>
-  if (error) return <p className="text-center py-10 text-red-500">Erreur : {error}</p>
-  if (!speaker) return <p className="text-center py-10">Intervenant introuvable</p>
+  if (loading) return <p className="text-center py-10">Loading speaker details...</p>
+  if (error) return <p className="text-center py-10 text-red-500">Error : {error}</p>
+  if (!speaker) return <p className="text-center py-10">Speaker not found</p>
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

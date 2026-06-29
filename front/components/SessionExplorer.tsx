@@ -71,7 +71,7 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
             boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
           }}>
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-          <span className="text-[12px] font-medium tracking-tight">Données rafraîchies</span>
+          <span className="text-[12px] font-medium tracking-tight">Data refreshed</span>
         </div>
       )}
 
@@ -79,7 +79,7 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 animate-fade-up delay-3">
         {/* Room filters */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[11px] mr-1" style={{ color: "rgba(140,162,205,0.30)" }}>Salle :</span>
+          <span className="text-[11px] mr-1" style={{ color: "rgba(140,162,205,0.30)" }}>Room :</span>
           <Link href={`/events/${eventId}`}
             className="text-[11px] px-3 py-1 rounded-full transition-all duration-200"
             style={{
@@ -87,7 +87,7 @@ export default function SessionExplorer({ sessions, eventId, rooms, selectedRoom
               border: selectedRoomId === null ? "1px solid rgba(200,218,248,0.25)" : "1px solid rgba(200,218,248,0.07)",
               color: selectedRoomId === null ? "rgba(255,255,255,0.9)" : "rgba(155,175,215,0.42)"
             }}>
-            Toutes
+            All Rooms
           </Link>
           {rooms.map(room => {
             const isSelected = selectedRoomId === room.id;
