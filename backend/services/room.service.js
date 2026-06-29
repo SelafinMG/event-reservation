@@ -17,7 +17,11 @@ export const getRoomsByEventService = async (eventId) => {
 export const getAllRoomsService = async () => {
   try {
     const { rows } = await pool.query(
-      'SELECT id, name, event_id AS "eventId" FROM rooms ORDER BY name'
+      `SELECT r.id, r.name, r.event_id AS "eventId", e.title
+       AS "eventName"
+       FROM rooms r
+       LEFT JOIN events e ON e.id = r.event_id
+       ORDER BY r.name`
     );
     return rows;
   } catch (err) {
@@ -29,7 +33,10 @@ export const getAllRoomsService = async () => {
 export const getRoomByIdService = async (roomId) => {
   try {
     const { rows: [room] } = await pool.query(
-      'SELECT id, name, event_id AS "eventId" FROM rooms WHERE id = $1',
+      `SELECT r.id, r.name, r.event_id AS "eventId", e.title AS "eventName"
+       FROM rooms r
+       LEFT JOIN events e ON e.id = r.event_id
+       WHERE r.id = $1`,
       [roomId]
     );
     return room ?? null;

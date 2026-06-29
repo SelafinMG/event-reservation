@@ -2,7 +2,9 @@ import api from "@/lib/api"
 import type { Session } from "@/lib/types"
 
 export async function getSession(sessionId: string) {
-  const { data } = await api.get<Session>(`/v1/sessions/${sessionId}`)
+  const { data } = await api.get<Session>(`/v1/sessions/${sessionId}`, {
+    headers: { 'Cache-Control': 'no-store' },
+  })
   return data
 }
 
