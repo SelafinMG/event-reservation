@@ -33,7 +33,7 @@ export const createRoomController = async (req, res) => {
   }
 
   const room = await createRoomService(eventId, name);
-  return res.status(201).json({ ...room, eventId });
+  return res.status(201).json(room);
 };
 
 export const updateRoomController = async (req, res) => {

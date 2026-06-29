@@ -1,16 +1,16 @@
 // src/sessions/SessionList.tsx
-import { List, Datagrid, TextField, DateField, BooleanField, ReferenceField, EditButton, ShowButton } from "react-admin"
+import { List, Datagrid, TextField, DateField, BooleanField, EditButton, ShowButton } from "react-admin"
 
 export const SessionList = () => (
   <List>
     <Datagrid>
-      <TextField source="title" />
-      <TextField source="description" />
-      <DateField source="startTime" showTime />
-      <DateField source="endTime" showTime />
-      <BooleanField source="isLive" />
-      <TextField source="capacity" />
-      <ReferenceField source="eventId" reference="events" />
+      <TextField source="title" label="Titre" />
+      <TextField source="description" label="Description" />
+      <DateField source="startTime" showTime label="Début" />
+      <DateField source="endTime" showTime label="Fin" />
+      <BooleanField source="isLive" label="En cours" />
+      <TextField source="capacity" label="Capacité" />
+      <TextField source="roomName" label="Salle" />
       <EditButton />
       <ShowButton />
     </Datagrid>
