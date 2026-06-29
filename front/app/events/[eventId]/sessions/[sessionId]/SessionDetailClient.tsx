@@ -135,6 +135,8 @@ export function SessionDetailClient({ session, event }: SessionDetailClientProps
         sessionId={session.id}
         initialQuestions={session.questions || []}
         isLive={session.isLive}
+        startTime={session.startTime}
+        endTime={session.endTime}
       />
     </div>
   )

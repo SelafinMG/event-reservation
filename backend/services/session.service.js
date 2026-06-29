@@ -19,7 +19,8 @@ export const getSessionQuestionsService = async (sessionId) => {
 export const getSessionByIdService = async (sessionId) => {
     try {
         const sessionQuery = `
-            SELECT s.*, r.name as room_name 
+            SELECT s.*, r.name as room_name,
+            (NOW() BETWEEN s.start_time AND s.end_time) AS is_live
             FROM sessions s
             JOIN rooms r ON s.room_id = r.id
             WHERE s.id = $1
@@ -44,8 +45,7 @@ export const getSessionByIdService = async (sessionId) => {
         // Fetch questions (sorted by upvotes)
         const questions = await getSessionQuestionsService(sessionId);
         
-        const now = new Date();
-        const isLive = now >= new Date(session.start_time) && now <= new Date(session.end_time);
+        const isLive = session.is_live;
         
         return {
             id: session.id,
@@ -70,15 +70,14 @@ export const getSessionByIdService = async (sessionId) => {
 
 export const createSessionQuestionService = async (sessionId, questionContent, authorName = null) => {
     try {
-        const sessionQuery = "SELECT * FROM sessions WHERE id = $1";
+        const sessionQuery = "SELECT *, (NOW() BETWEEN start_time AND end_time) AS is_live FROM sessions WHERE id = $1";
         const sessionRequest = await pool.query(sessionQuery, [sessionId]);
         if(sessionRequest.rowCount === 0) {
             throw new Error("Session not found");
         }
         
         const session = sessionRequest.rows[0];
-        const now = new Date();
-        const isLive = now >= new Date(session.start_time) && now <= new Date(session.end_time);
+        const isLive = session.is_live;
         
         if (!isLive) {
             const error = new Error("Les questions ne peuvent être posées que pendant une session en cours.");
@@ -96,15 +95,14 @@ export const createSessionQuestionService = async (sessionId, questionContent, a
 
 export const upvoteQUestionService = async (questionId, sessionId) => {
     try {
-        const sessionQuery = "SELECT * FROM sessions WHERE id = $1";
+        const sessionQuery = "SELECT *, (NOW() BETWEEN start_time AND end_time) AS is_live FROM sessions WHERE id = $1";
         const sessionRequest = await pool.query(sessionQuery, [sessionId]);
         if(sessionRequest.rowCount === 0) {
             throw new Error("Session not found");
         }
 
         const session = sessionRequest.rows[0];
-        const now = new Date();
-        const isLive = now >= new Date(session.start_time) && now <= new Date(session.end_time);
+        const isLive = session.is_live;
         
         if (!isLive) {
             const error = new Error("Les upvotes ne sont autorisés que pendant une session en cours.");

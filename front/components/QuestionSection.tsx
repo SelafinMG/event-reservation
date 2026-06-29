@@ -12,18 +12,32 @@ interface QuestionSectionProps {
   sessionId: string
   initialQuestions?: Question[]
   isLive?: boolean
+  startTime?: string
+  endTime?: string
 }
 
 export default function QuestionSection({
   sessionId,
   initialQuestions = [],
-  isLive = false,
+  isLive: isLiveFromServer = false,
+  startTime,
+  endTime,
 }: QuestionSectionProps) {
   const [questions, setQuestions] = useState<Question[]>(initialQuestions)
   const [newQuestion, setNewQuestion] = useState("")
   const [authorName, setAuthorName] = useState("")
   const [isPending, startTransition] = useTransition()
   const [upvoted, setUpvoted] = useState<Set<string>>(new Set())
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  // Recalculate isLive client-side from session times to avoid stale SSR cache
+  const isLive = (() => {
+    if (startTime && endTime) {
+      const now = new Date()
+      return now >= new Date(startTime) && now <= new Date(endTime)
+    }
+    return isLiveFromServer
+  })()
 
   useEffect(() => {
     let mounted = true
@@ -55,6 +69,7 @@ export default function QuestionSection({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!newQuestion.trim()) return
+    setSubmitError(null)
 
     startTransition(() => {
       ;(async () => {
@@ -66,7 +81,10 @@ export default function QuestionSection({
           setQuestions((prev) => [created, ...prev].sort((a, b) => b.upvotes - a.upvotes))
           setNewQuestion("")
           setAuthorName("")
-        } catch (err) {
+        } catch (err: unknown) {
+          const axiosErr = err as { response?: { data?: { message?: string; code?: string } } }
+          const msg = axiosErr?.response?.data?.message || "Erreur lors de l'envoi de la question."
+          setSubmitError(msg)
           console.error(err)
         }
       })()
@@ -156,6 +174,12 @@ export default function QuestionSection({
             <Send className="w-4 h-4" />
           </Button>
         </div>
+        {!isLive && (
+          <p className="text-[11px] text-amber-400/70 mt-1">⚠ Les questions ne peuvent être posées que pendant une session en cours.</p>
+        )}
+        {submitError && (
+          <p className="text-[11px] text-red-400/80 mt-1">⚠ {submitError}</p>
+        )}
       </motion.form>
 
       {questions.length === 0 ? (
