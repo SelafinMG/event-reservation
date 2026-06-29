@@ -9,7 +9,14 @@ export const getSessionQuestionsService = async (sessionId) => {
         }
         const getQuestionsQuery = "SELECT * FROM questions WHERE session_id = $1 ORDER BY upvotes DESC, created_at DESC";
         const questionRequest = await pool.query(getQuestionsQuery, [sessionId]);
-        return questionRequest.rows;
+        return questionRequest.rows.map(q => ({
+          id: q.id,
+          sessionId: q.session_id,
+          content: q.content,
+          authorName: q.author_name,
+          upvotes: q.upvotes,
+          createdAt: q.created_at,
+        }));
         
     } catch (error) {
         throw error;
