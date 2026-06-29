@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { List, Datagrid, TextField, DateField, EditButton, Edit, SimpleForm, TextInput, DateTimeInput, NumberInput, ReferenceInput, SelectInput, Create } from "react-admin";
+import { List, Datagrid, TextField, DateField, NumberField, EditButton, Edit, SimpleForm, TextInput, DateTimeInput, NumberInput, ReferenceInput, SelectInput, Create } from "react-admin";
 
 export const SessionList = () => (
   <List>
@@ -8,7 +8,7 @@ export const SessionList = () => (
       <TextField source="description" />
       <DateField source="startTime" showTime />
       <DateField source="endTime" showTime />
-      <NumberInput source="capacity" />
+      <NumberField source="capacity" />
       <EditButton />
     </Datagrid>
   </List>
