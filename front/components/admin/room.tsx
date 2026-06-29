@@ -1,11 +1,13 @@
 // @ts-nocheck
-import { List, Datagrid, TextField, EditButton, Edit, SimpleForm, TextInput, ReferenceInput, SelectInput, Create, required } from "react-admin";
+import { List, Datagrid, TextField, ReferenceField, EditButton, Edit, SimpleForm, TextInput, ReferenceInput, SelectInput, Create, required } from "react-admin";
 
 export const RoomList = () => (
   <List>
     <Datagrid>
       <TextField source="name" />
-      <TextField source="eventId" />
+      <ReferenceField source="eventId" reference="events" label="Event">
+        <TextField source="title" />
+      </ReferenceField>
       <EditButton />
     </Datagrid>
   </List>

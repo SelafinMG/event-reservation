@@ -6,9 +6,10 @@ import { RoomList, RoomEdit, RoomCreate } from "./room";
 import { SessionList, SessionEdit, SessionCreate } from "./sessions";
 import { SpeakerList, SpeakerEdit, SpeakerCreate } from "./speakers";
 import { QuestionList, QuestionEdit, QuestionCreate } from "./questions";
+import { Dashboard } from "./Dashboard";
 
 export const AppAdmin = () => (
-  <Admin dataProvider={dataProvider} authProvider={authProvider}>
+  <Admin dataProvider={dataProvider} authProvider={authProvider} dashboard={Dashboard}>
     <Resource name="events" list={EventList} edit={EventEdit} create={EventCreate} />
     <Resource name="rooms" list={RoomList} edit={RoomEdit} create={RoomCreate} />
     <Resource name="sessions" list={SessionList} edit={SessionEdit} create={SessionCreate} />
